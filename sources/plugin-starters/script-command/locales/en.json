@@ -1,0 +1,17 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "Command-focused Lua plugin starter for TinaIDE.",
+  "contributions": {
+    "commands": {
+      "com.example.{{PROJECT_NAME}}.toggleFileTree": {
+        "title": "Toggle File Tree"
+      },
+      "com.example.{{PROJECT_NAME}}.insertHeader": {
+        "title": "Insert Starter Header"
+      },
+      "com.example.{{PROJECT_NAME}}.wrapSelection": {
+        "title": "Wrap Selection"
+      }
+    }
+  }
+}

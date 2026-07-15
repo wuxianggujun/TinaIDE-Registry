@@ -1,0 +1,19 @@
+{
+  "name": "{{PROJECT_NAME}} 语言支持",
+  "description": "TinaIDE LSP 插件入门模板。",
+  "contributions": {
+    "languageServers": {
+      "{{PROJECT_NAME}}-server": {
+        "name": "{{PROJECT_NAME}} 语言服务器"
+      }
+    },
+    "toolchains": {
+      "{{PROJECT_NAME}}-runtime": {
+        "name": "替换运行时"
+      },
+      "{{PROJECT_NAME}}-server-bin": {
+        "name": "替换语言服务器"
+      }
+    }
+  }
+}

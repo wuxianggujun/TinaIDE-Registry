@@ -7,6 +7,14 @@
   "author": {
     "name": "Your Name"
   },
+  "locales": {
+    "default": "en",
+    "files": {
+      "en": "locales/en.json",
+      "zh-CN": "locales/zh-CN.json",
+      "zh": "locales/zh-CN.json"
+    }
+  },
   "contributions": {
     "themes": [
       "themes/starter-theme.json"

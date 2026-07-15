@@ -1,0 +1,19 @@
+{
+  "name": "{{PROJECT_NAME}} Language Support",
+  "description": "Starter LSP plugin for TinaIDE.",
+  "contributions": {
+    "languageServers": {
+      "{{PROJECT_NAME}}-server": {
+        "name": "{{PROJECT_NAME}} Language Server"
+      }
+    },
+    "toolchains": {
+      "{{PROJECT_NAME}}-runtime": {
+        "name": "Replace Runtime"
+      },
+      "{{PROJECT_NAME}}-server-bin": {
+        "name": "Replace Language Server"
+      }
+    }
+  }
+}

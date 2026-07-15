@@ -86,8 +86,10 @@ if (Test-Path -LiteralPath $outputRoot) {
 New-Item -ItemType Directory -Force -Path $outputRoot | Out-Null
 
 $pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
+$pluginsIndexV3Path = Join-Path $registryRoot "plugins/index.v3.json"
 $packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
 Copy-ReleaseAsset -SourcePath $pluginsIndexV2Path -AssetName "plugins.index.v2.json"
+Copy-ReleaseAsset -SourcePath $pluginsIndexV3Path -AssetName "plugins.index.v3.json"
 Copy-ReleaseAsset -SourcePath $packagesIndexV2Path -AssetName "packages.index.v2.json"
 
 $pluginCatalog = (Get-Content $pluginsIndexV2Path -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
@@ -98,6 +100,26 @@ foreach ($plugin in @($pluginCatalog)) {
     }
 
     $detailAssetName = "plugins.{0}.plugin.json" -f $plugin.plugin_id
+    Copy-ReleaseAsset -SourcePath $detailSource -AssetName $detailAssetName
+
+    $detail = Get-Content $detailSource -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($version in @($detail.versions)) {
+        if ([string]::IsNullOrWhiteSpace([string]$version.download_url)) {
+            continue
+        }
+        $assetName = "{0}-{1}.tinaplug" -f $detail.plugin_id, $version.version
+        Copy-RegistryAsset -UrlOrPath ([string]$version.download_url) -AssetName $assetName
+    }
+}
+
+$pluginCatalogV3 = (Get-Content $pluginsIndexV3Path -Raw -Encoding UTF8 | ConvertFrom-Json).plugins
+foreach ($plugin in @($pluginCatalogV3)) {
+    $detailSource = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
+    if ($null -eq $detailSource) {
+        continue
+    }
+
+    $detailAssetName = "plugins.{0}.plugin.v3.json" -f $plugin.plugin_id
     Copy-ReleaseAsset -SourcePath $detailSource -AssetName $detailAssetName
 
     $detail = Get-Content $detailSource -Raw -Encoding UTF8 | ConvertFrom-Json

@@ -1,0 +1,22 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "TinaIDE Lua 插件入门模板。",
+  "contributions": {
+    "commands": {
+      "com.example.{{PROJECT_NAME}}.toggleFileTree": {
+        "title": "切换文件树"
+      },
+      "com.example.{{PROJECT_NAME}}.insertHeader": {
+        "title": "插入模板头部"
+      },
+      "com.example.{{PROJECT_NAME}}.wrapSelection": {
+        "title": "包裹选区"
+      }
+    },
+    "panels": {
+      "status": {
+        "title": "插件状态"
+      }
+    }
+  }
+}

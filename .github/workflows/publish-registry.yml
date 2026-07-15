@@ -78,7 +78,7 @@ jobs:
         if: ${{ inputs.create_release }}
         shell: pwsh
         run: |
-          $plugins = (Get-Content plugins/index.v2.json -Raw | ConvertFrom-Json).plugins
+          $plugins = (Get-Content plugins/index.v3.json -Raw | ConvertFrom-Json).plugins
           $packages = (Get-Content packages/index.v2.json -Raw | ConvertFrom-Json).packages
           $pluginLines = $plugins | ForEach-Object {
             "- plugin $($_.plugin_id) $($_.latest_version)"
@@ -97,12 +97,14 @@ jobs:
             $packageLines,
             "",
             "Indexes:",
+            "- plugins/index.v3.json",
             "- plugins/index.v2.json",
             "- packages/index.v2.json",
-            "- plugins/<plugin-id>/plugin.json",
+            "- plugins/<plugin-id>/plugin.v3.json",
+            "- plugins/<plugin-id>/plugin.json (legacy-compatible view)",
             "- packages/<package-id>/package.json",
             "",
-            "Release assets include individual plugin/package files, v2 details, and v2 indexes. Do not use the auto-generated source code archives for marketplace downloads."
+            "Release assets include individual plugin/package files, plugin v2/v3 details and indexes, and package v2 metadata. Do not use the auto-generated source code archives for marketplace downloads."
           )
           $notes | Set-Content -Path release-notes.md -Encoding UTF8
 

@@ -1,7 +1,7 @@
 {
   "id": "tinaide.lsp.python",
   "name": "Python Language Support",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "lsp",
   "author": {
     "name": "TinaIDE Team"
@@ -82,10 +82,6 @@
     ]
   },
   "activationEvents": [
-    "onLanguage:python",
-    "workspaceContains:**/*.py",
-    "workspaceContains:requirements.txt",
-    "workspaceContains:setup.py",
-    "workspaceContains:pyproject.toml"
+    "onLanguage:python"
   ]
 }

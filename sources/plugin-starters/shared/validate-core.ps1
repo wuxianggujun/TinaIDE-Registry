@@ -9,7 +9,7 @@ $root = (Resolve-Path $PluginRoot).Path
 $rulesPath = Join-Path $scriptDir "validation-rules.json"
 $manifestPath = Join-Path $root "manifest.json"
 
-$rules = Get-Content $rulesPath -Raw | ConvertFrom-Json
+$rules = Get-Content $rulesPath -Raw -Encoding UTF8 | ConvertFrom-Json
 $supportedApiVersion = [int]$rules.supportedApiVersion
 
 $knownHostCommands = @{}
@@ -233,7 +233,7 @@ if (-not (Test-Path $manifestPath)) {
 }
 
 try {
-    $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
+    $manifest = Get-Content $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
 } catch {
     Add-ValidationError "manifest.json is not valid JSON: $($_.Exception.Message)"
     foreach ($message in $errors) {
@@ -392,6 +392,47 @@ if ($networkHosts.Count -gt 0 -and -not $hasNetworkPermission) {
     Add-ValidationWarning "networkHosts is declared without network.fetch or network.unrestricted."
 }
 
+$locales = Get-PropValue $manifest "locales"
+if ($null -ne $locales) {
+    if ($locales -isnot [pscustomobject]) {
+        Add-ValidationError "manifest.locales must be an object."
+    } else {
+        $localeFiles = Get-PropValue $locales "files"
+        if ($localeFiles -isnot [pscustomobject]) {
+            Add-ValidationError "manifest.locales.files must be a non-empty object."
+        } else {
+            foreach ($property in $localeFiles.PSObject.Properties) {
+                $localeKey = Get-Text $property.Name
+                $localePath = Get-Text $property.Value
+                $normalizedLocalePath = $localePath.Replace("\", "/")
+                if ([string]::IsNullOrWhiteSpace($localeKey)) {
+                    Add-ValidationError "manifest.locales.files contains an empty locale key."
+                }
+                if (-not (Test-SafeRelativePath $localePath) -or -not $normalizedLocalePath.StartsWith("locales/")) {
+                    $displayPath = if ([string]::IsNullOrWhiteSpace($localePath)) { "<empty>" } else { $localePath }
+                    Add-ValidationError "manifest.locales.files['$localeKey'] must point to locales/*.json: $displayPath"
+                    continue
+                }
+
+                $localeFile = Join-Path $root $localePath
+                if (-not (Test-Path $localeFile)) {
+                    Add-ValidationError "Locale file does not exist: $localePath"
+                    continue
+                }
+
+                try {
+                    $localeData = Get-Content $localeFile -Raw -Encoding UTF8 | ConvertFrom-Json
+                    if ($null -eq $localeData -or $localeData -isnot [pscustomobject]) {
+                        Add-ValidationError "Locale file must contain a JSON object: $localePath"
+                    }
+                } catch {
+                    Add-ValidationError "Locale file is not valid JSON: $localePath ($($_.Exception.Message))"
+                }
+            }
+        }
+    }
+}
+
 if ($pluginType -in @("script", "hybrid")) {
     $mainEntry = Get-Text (Get-PropValue $manifest "main")
     if ([string]::IsNullOrWhiteSpace($mainEntry)) {
@@ -411,7 +452,7 @@ if ($contributions -is [pscustomobject]) {
     }
 
     foreach ($keybindingPath in (Get-Items (Get-PropValue $contributions "keybindings"))) {
-        Require-SafePath -PathValue (Get-Text $keybindingPath) -FieldName "contributions.keybindings[]" -MustExist $false
+        Require-SafePath -PathValue (Get-Text $keybindingPath) -FieldName "contributions.keybindings[]" -MustExist $true
     }
 
     $projectTemplateIndex = 0
@@ -548,13 +589,40 @@ if ($contributions -is [pscustomobject]) {
             -DeclaredCommandIds $declaredCommandIds `
             -CustomMenuCommandIds $customMenuCommandIds
 
-        if ((Get-Items (Get-PropValue $menus "editor/toolbar")).Count -gt 0) {
-            Add-ValidationWarning "editor/toolbar is declared but the host does not support it yet."
-        }
     }
 
-    if ((Get-Items (Get-PropValue $contributions "panels")).Count -gt 0) {
-        Add-ValidationWarning "contributions.panels is declared but panels are not supported yet."
+    $panels = @(Get-Items (Get-PropValue $contributions "panels"))
+    if ($panels.Count -gt 0 -and $pluginType -notin @("script", "hybrid")) {
+        Add-ValidationError "contributions.panels is supported only for script or hybrid plugins."
+    }
+    if ($panels.Count -gt 16) {
+        Add-ValidationError "A plugin may declare at most 16 panels."
+    }
+    $panelIds = @()
+    $panelIndex = 0
+    foreach ($panel in $panels) {
+        $panelIndex += 1
+        if ($null -eq $panel -or $panel -isnot [pscustomobject]) {
+            Add-ValidationError "contributions.panels[$panelIndex] must be an object."
+            continue
+        }
+        $panelId = Get-Text (Get-PropValue $panel "id")
+        $panelTitle = Get-Text (Get-PropValue $panel "title")
+        if ([string]::IsNullOrWhiteSpace($panelId) -or $panelId.Length -gt 128 -or
+            $panelId -notmatch '^[a-zA-Z0-9][a-zA-Z0-9._-]*$') {
+            Add-ValidationError "contributions.panels[$panelIndex].id is invalid: $panelId"
+        } else {
+            $panelIds += $panelId
+        }
+        if ([string]::IsNullOrWhiteSpace($panelTitle) -or $panelTitle.Length -gt 128) {
+            Add-ValidationError (
+                "contributions.panels[$panelIndex].title is required and must not exceed 128 characters."
+            )
+        }
+    }
+    $duplicatePanelIds = Get-Duplicates $panelIds
+    if ($duplicatePanelIds.Count -gt 0) {
+        Add-ValidationError "Duplicate panel id(s) detected: $($duplicatePanelIds -join ', ')"
     }
 
     if ($supportsRuntimePluginCommands -and -not $hasCommandExecute) {
@@ -625,6 +693,44 @@ if ($contributions -is [pscustomobject]) {
         if (-not (Test-Path (Join-Path $root $iconSpec))) {
             Add-ValidationError "contributions.fileIcons[$fileIconIndex].icon does not exist: $iconSpec"
         }
+    }
+}
+
+$activationEvents = @()
+foreach ($activationEvent in (Get-Items (Get-PropValue $manifest "activationEvents"))) {
+    $activationEvents += Get-Text $activationEvent
+}
+if ($activationEvents.Count -gt 0 -and $pluginType -ne "lsp") {
+    Add-ValidationError "manifest.activationEvents is supported only for LSP plugins."
+}
+$duplicateActivationEvents = Get-Duplicates $activationEvents
+if ($duplicateActivationEvents.Count -gt 0) {
+    Add-ValidationError "Duplicate activation event(s) detected: $($duplicateActivationEvents -join ', ')"
+}
+$contributedLanguages = [System.Collections.Generic.HashSet[string]]::new()
+if ($contributions -is [pscustomobject]) {
+    foreach ($server in (Get-Items (Get-PropValue $contributions "languageServers"))) {
+        if ($server -isnot [pscustomobject]) {
+            continue
+        }
+        foreach ($language in (Get-Items (Get-PropValue $server "languages"))) {
+            $languageId = Get-Text $language
+            if (-not [string]::IsNullOrWhiteSpace($languageId)) {
+                $contributedLanguages.Add($languageId) | Out-Null
+            }
+        }
+    }
+}
+foreach ($activationEvent in $activationEvents) {
+    if ($activationEvent -notmatch '^onLanguage:([a-zA-Z0-9][a-zA-Z0-9._+-]*)$') {
+        Add-ValidationError (
+            "Unsupported activation event '$activationEvent'. " +
+            "apiVersion 1 supports only onLanguage:<languageId>."
+        )
+    } elseif (-not $contributedLanguages.Contains($Matches[1])) {
+        Add-ValidationError (
+            "Activation event language '$($Matches[1])' is not declared in contributions.languageServers."
+        )
     }
 }
 

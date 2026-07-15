@@ -1,0 +1,14 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "Starter config plugin for TinaIDE.",
+  "contributions": {
+    "commands": {
+      "editor.format": {
+        "title": "Format Active File"
+      },
+      "file.copyPath": {
+        "title": "Copy Selected Path"
+      }
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-06-12T00:00:00Z",
+  "mirrors": [
+    {
+      "matchPrefix": "https://dl-cdn.alpinelinux.org/",
+      "replaceWith": "https://mirrors.tuna.tsinghua.edu.cn/"
+    },
+    {
+      "matchPrefix": "https://dl-cdn.alpinelinux.org/",
+      "replaceWith": "https://mirrors.ustc.edu.cn/"
+    },
+    {
+      "matchPrefix": "https://dl-cdn.alpinelinux.org/",
+      "replaceWith": "https://mirrors.aliyun.com/"
+    },
+    {
+      "matchPrefix": "https://cdimage.ubuntu.com/cdimage/",
+      "replaceWith": "https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/"
+    },
+    {
+      "matchPrefix": "https://cdimage.ubuntu.com/cdimage/",
+      "replaceWith": "https://mirrors.ustc.edu.cn/ubuntu-cdimage/"
+    }
+  ],
+  "distros": [
+    {
+      "id": "alpine",
+      "family": "ALPINE",
+      "displayName": "Alpine Linux",
+      "packageManager": "APK",
+      "defaultReleaseId": "3.23",
+      "homepageUrl": "https://www.alpinelinux.org/",
+      "releases": [
+        {
+          "id": "3.23",
+          "version": "3.23.4",
+          "displayName": "Alpine 3.23",
+          "channel": "stable",
+          "artifacts": [
+            {
+              "architecture": "AARCH64",
+              "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "9250667a8affac8f1e98086392f80f43f086626701e9bce33398eb9b6c0bd64c"
+              },
+              "sizeBytes": 4041810,
+              "signatureUrl": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/aarch64/alpine-minirootfs-3.23.4-aarch64.tar.gz.asc"
+            },
+            {
+              "architecture": "ARM",
+              "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/armv7/alpine-minirootfs-3.23.4-armv7.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "757511f5473e985a591b3bd8e373a987bc46f1c6973e50aa77befb9576367d3a"
+              },
+              "sizeBytes": 3194525,
+              "signatureUrl": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/armv7/alpine-minirootfs-3.23.4-armv7.tar.gz.asc"
+            },
+            {
+              "architecture": "X86_64",
+              "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/x86_64/alpine-minirootfs-3.23.4-x86_64.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "85498865362aa7ebececa0d725a2f2e4db7ac4e4b2850b8df21645afa0d03ee3"
+              },
+              "sizeBytes": 3715799,
+              "signatureUrl": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/x86_64/alpine-minirootfs-3.23.4-x86_64.tar.gz.asc"
+            },
+            {
+              "architecture": "I686",
+              "url": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/x86/alpine-minirootfs-3.23.4-x86.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "dba449a2c286f73cb1cf9b248631f3182c291f22619e1500922bd97b542263fa"
+              },
+              "sizeBytes": 3556246,
+              "signatureUrl": "https://dl-cdn.alpinelinux.org/alpine/v3.23/releases/x86/alpine-minirootfs-3.23.4-x86.tar.gz.asc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ubuntu",
+      "family": "UBUNTU",
+      "displayName": "Ubuntu",
+      "packageManager": "APT",
+      "defaultReleaseId": "24.04",
+      "homepageUrl": "https://ubuntu.com/",
+      "releases": [
+        {
+          "id": "24.04",
+          "version": "24.04.4",
+          "displayName": "Ubuntu 24.04 LTS",
+          "channel": "lts",
+          "artifacts": [
+            {
+              "architecture": "AARCH64",
+              "url": "https://cdimage.ubuntu.com/cdimage/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-arm64.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "04207713ece899c3740823d33690441ad3a7f0ded1101aca744e2b0f37ac7ff2"
+              },
+              "sizeBytes": 29870567
+            },
+            {
+              "architecture": "ARM",
+              "url": "https://cdimage.ubuntu.com/cdimage/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-armhf.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "991520b47f6586f38a78505cf016e300b6191bb8ff86a0723481ec23a37ab7f4"
+              },
+              "sizeBytes": 27088043
+            },
+            {
+              "architecture": "X86_64",
+              "url": "https://cdimage.ubuntu.com/cdimage/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.4-base-amd64.tar.gz",
+              "format": "TAR_GZ",
+              "checksum": {
+                "algorithm": "SHA256",
+                "value": "c1e67ef7b17a6300e136118bd1dc04725009cb376c1aad10abcf8cd453628d58"
+              },
+              "sizeBytes": 29989394
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

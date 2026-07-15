@@ -7,6 +7,14 @@
   "author": {
     "name": "Your Name"
   },
+  "locales": {
+    "default": "en",
+    "files": {
+      "en": "locales/en.json",
+      "zh-CN": "locales/zh-CN.json",
+      "zh": "locales/zh-CN.json"
+    }
+  },
   "main": "main.lua",
   "contributions": {
     "commands": [
@@ -21,6 +29,12 @@
       {
         "id": "com.example.{{PROJECT_NAME}}.wrapSelection",
         "title": "Wrap Selection"
+      }
+    ],
+    "panels": [
+      {
+        "id": "status",
+        "title": "Plugin Status"
       }
     ],
     "menus": {

@@ -1,0 +1,14 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "description": "TinaIDE 配置型插件入门模板。",
+  "contributions": {
+    "commands": {
+      "editor.format": {
+        "title": "格式化当前文件"
+      },
+      "file.copyPath": {
+        "title": "复制所选路径"
+      }
+    }
+  }
+}

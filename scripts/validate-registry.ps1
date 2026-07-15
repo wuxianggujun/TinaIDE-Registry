@@ -25,6 +25,21 @@ function Get-FileSha256 {
     return (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLowerInvariant()
 }
 
+function ConvertTo-VersionCode {
+    param([Parameter(Mandatory = $true)][string]$Version)
+
+    Assert-RegistryCondition `
+        -Condition ($Version -match '^\d+(?:\.\d+){0,2}(?:-[0-9A-Za-z.-]+)?$') `
+        -Message "Invalid version text: $Version"
+    $parts = [regex]::Split($Version, "[^0-9]+") |
+        Where-Object { $_ -ne "" } |
+        ForEach-Object { [int]$_ }
+    $major = $parts[0]
+    $minor = if ($parts.Count -gt 1) { $parts[1] } else { 0 }
+    $patch = if ($parts.Count -gt 2) { $parts[2] } else { 0 }
+    return ($major * 10000) + ($minor * 100) + $patch
+}
+
 function Resolve-RegistryFile {
     param([Parameter(Mandatory = $true)][string]$UrlOrPath)
 
@@ -207,13 +222,41 @@ function Assert-FileDigest {
 }
 
 function Assert-TinaPlugManifest {
-    param([Parameter(Mandatory = $true)][string]$Path)
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [string]$ExpectedPluginId = "",
+        $ExpectedVersion = $null
+    )
 
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     $zip = [System.IO.Compression.ZipFile]::OpenRead($Path)
     try {
-        $hasManifest = $zip.Entries | Where-Object { $_.FullName -eq "manifest.json" } | Select-Object -First 1
-        Assert-RegistryCondition -Condition ($null -ne $hasManifest) -Message "Tinaplug missing root manifest.json: $Path"
+        $manifestEntry = $zip.Entries | Where-Object { $_.FullName -eq "manifest.json" } | Select-Object -First 1
+        Assert-RegistryCondition -Condition ($null -ne $manifestEntry) -Message "Tinaplug missing root manifest.json: $Path"
+        $reader = [System.IO.StreamReader]::new($manifestEntry.Open(), [System.Text.Encoding]::UTF8)
+        try {
+            $manifest = $reader.ReadToEnd() | ConvertFrom-Json
+        } finally {
+            $reader.Dispose()
+        }
+        if ($null -ne $ExpectedVersion) {
+            $manifestApiVersion = if (Test-JsonProperty -Object $manifest -Name "apiVersion") {
+                [int]$manifest.apiVersion
+            } else {
+                1
+            }
+            $detailApiVersion = if (Test-JsonProperty -Object $ExpectedVersion -Name "api_version") {
+                [int]$ExpectedVersion.api_version
+            } else {
+                1
+            }
+            Assert-RegistryCondition -Condition ([string]$manifest.id -eq $ExpectedPluginId) -Message "Tinaplug id mismatch: $Path"
+            Assert-RegistryCondition -Condition ([string]$manifest.version -eq [string]$ExpectedVersion.version) -Message "Tinaplug version mismatch: $Path"
+            Assert-RegistryCondition -Condition ($manifestApiVersion -eq $detailApiVersion) -Message "Tinaplug apiVersion mismatch: $Path"
+            Assert-RegistryCondition `
+                -Condition ([string]$manifest.minAppVersion -eq [string]$ExpectedVersion.min_app_version) `
+                -Message "Tinaplug minAppVersion mismatch: $Path"
+        }
     } finally {
         $zip.Dispose()
     }
@@ -224,7 +267,9 @@ function Assert-DownloadFile {
         [Parameter(Mandatory = $true)][string]$UrlOrPath,
         [long]$ExpectedSize = -1,
         [string]$ExpectedHash = "",
-        [switch]$RequireTinaplugManifest
+        [switch]$RequireTinaplugManifest,
+        [string]$ExpectedPluginId = "",
+        $ExpectedPluginVersion = $null
     )
 
     Assert-RegistryCondition `
@@ -238,7 +283,53 @@ function Assert-DownloadFile {
 
     Assert-FileDigest -Path $downloadPath -ExpectedSize $ExpectedSize -ExpectedHash $ExpectedHash
     if ($RequireTinaplugManifest) {
-        Assert-TinaPlugManifest -Path $downloadPath
+        Assert-TinaPlugManifest `
+            -Path $downloadPath `
+            -ExpectedPluginId $ExpectedPluginId `
+            -ExpectedVersion $ExpectedPluginVersion
+    }
+}
+
+function Invoke-PluginContractValidation {
+    $validatorPath = Join-Path $registryRoot "sources/plugin-starters/shared/validate_core.py"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $validatorPath -PathType Leaf) -Message "Missing plugin contract validator"
+
+    $pythonCommand = @("python3", "python", "py") |
+        ForEach-Object { Get-Command $_ -ErrorAction SilentlyContinue } |
+        Select-Object -First 1
+    Assert-RegistryCondition -Condition ($null -ne $pythonCommand) -Message "Python is required for plugin contract validation"
+    foreach ($sourceDir in Get-ChildItem -LiteralPath (Join-Path $registryRoot "sources/plugins") -Directory) {
+        $arguments = if ($pythonCommand.Name -eq "py.exe" -or $pythonCommand.Name -eq "py") {
+            @("-3", "-B", $validatorPath, $sourceDir.FullName)
+        } else {
+            @("-B", $validatorPath, $sourceDir.FullName)
+        }
+        & $pythonCommand.Source @arguments
+        Assert-RegistryCondition `
+            -Condition ($LASTEXITCODE -eq 0) `
+            -Message "Plugin host contract validation failed: $($sourceDir.Name)"
+    }
+}
+
+function Assert-LinuxDistroManifest {
+    $manifestPath = Join-Path $registryRoot "linux-distro/manifest.v1.json"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $manifestPath -PathType Leaf) -Message "Missing linux-distro/manifest.v1.json"
+    $manifest = Get-Content -Raw -Encoding UTF8 $manifestPath | ConvertFrom-Json
+    Assert-RegistryCondition -Condition ([int]$manifest.schemaVersion -eq 1) -Message "Invalid Linux distro manifest schemaVersion"
+    Assert-RegistryCondition -Condition ($null -ne $manifest.mirrors) -Message "Linux distro manifest must declare mirrors"
+    Assert-RegistryCondition -Condition (-not (Test-JsonProperty -Object $manifest -Name "mirors")) -Message "Linux distro manifest contains misspelled mirors field"
+    foreach ($distro in @($manifest.distros)) {
+        foreach ($release in @($distro.releases)) {
+            foreach ($artifact in @($release.artifacts)) {
+                $checksum = [string]$artifact.checksum.value
+                Assert-RegistryCondition `
+                    -Condition ($checksum -match '^[0-9a-fA-F]{64}$') `
+                    -Message "Invalid Linux distro SHA256: $($distro.id) $($release.id) $($artifact.architecture)"
+                Assert-RegistryCondition `
+                    -Condition (-not [string]::IsNullOrWhiteSpace([string]$artifact.url)) `
+                    -Message "Linux distro artifact URL is blank: $($distro.id) $($artifact.architecture)"
+            }
+        }
     }
 }
 
@@ -268,11 +359,13 @@ if (-not $SkipBuild) {
 }
 
 $pluginsIndexV2Path = Join-Path $registryRoot "plugins/index.v2.json"
+$pluginsIndexV3Path = Join-Path $registryRoot "plugins/index.v3.json"
 $packagesIndexV2Path = Join-Path $registryRoot "packages/index.v2.json"
 $pluginsIndexPath = Join-Path $registryRoot "plugins/index.json"
 $packagesIndexPath = Join-Path $registryRoot "packages/index.json"
 
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexV2Path) -Message "Missing plugins/index.v2.json"
+Assert-RegistryCondition -Condition (Test-Path -LiteralPath $pluginsIndexV3Path) -Message "Missing plugins/index.v3.json"
 Assert-RegistryCondition -Condition (Test-Path -LiteralPath $packagesIndexV2Path) -Message "Missing packages/index.v2.json"
 
 if ($AllowLegacyV1) {
@@ -284,45 +377,85 @@ if ($AllowLegacyV1) {
 }
 
 $pluginsIndexV2 = Get-Content -Raw -Encoding UTF8 $pluginsIndexV2Path | ConvertFrom-Json
+$pluginsIndexV3 = Get-Content -Raw -Encoding UTF8 $pluginsIndexV3Path | ConvertFrom-Json
 $packagesIndexV2 = Get-Content -Raw -Encoding UTF8 $packagesIndexV2Path | ConvertFrom-Json
 
-$pluginCatalog = @($pluginsIndexV2.plugins)
+$pluginCatalog = @($pluginsIndexV3.plugins)
+$legacyPluginCatalog = @($pluginsIndexV2.plugins)
 $packageCatalog = @($packagesIndexV2.packages)
 $packageCategories = @($packagesIndexV2.categories)
 
 Assert-RegistryCondition -Condition ([int]$pluginsIndexV2.schema_version -eq 2) -Message "Invalid plugins/index.v2.json schema_version"
+Assert-RegistryCondition -Condition ([int]$pluginsIndexV3.schema_version -eq 3) -Message "Invalid plugins/index.v3.json schema_version"
 Assert-RegistryCondition -Condition ([int]$packagesIndexV2.schema_version -eq 2) -Message "Invalid packages/index.v2.json schema_version"
-Assert-UniqueValues -Values @($pluginCatalog | ForEach-Object { $_.plugin_id }) -Name "plugin v2 plugin_id"
+Assert-UniqueValues -Values @($pluginCatalog | ForEach-Object { $_.plugin_id }) -Name "plugin v3 plugin_id"
+Assert-UniqueValues -Values @($legacyPluginCatalog | ForEach-Object { $_.plugin_id }) -Name "legacy plugin v2 plugin_id"
 Assert-UniqueValues -Values @($packageCatalog | ForEach-Object { $_.id }) -Name "package v2 id"
 Assert-UniqueValues -Values @($packageCategories | ForEach-Object { $_.id }) -Name "package category id"
 
 $categoryIds = @($packageCategories | ForEach-Object { [string]$_.id })
 
+$pluginDetailsV3 = @{}
 foreach ($plugin in $pluginCatalog) {
-    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin v2 id is blank"
-    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.detail_url)) -Message "Plugin v2 detail_url is blank: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.plugin_id)) -Message "Plugin v3 id is blank"
+    Assert-RegistryCondition -Condition (-not [string]::IsNullOrWhiteSpace([string]$plugin.detail_url)) -Message "Plugin v3 detail_url is blank: $($plugin.plugin_id)"
     Assert-LightweightPluginCatalogEntry -Plugin $plugin
 
     $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
-    Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Plugin v2 detail_url must be repository-relative: $($plugin.plugin_id)"
-    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $detailPath -PathType Leaf) -Message "Plugin v2 detail file missing: $($plugin.detail_url)"
+    Assert-RegistryCondition -Condition ($null -ne $detailPath) -Message "Plugin v3 detail_url must be repository-relative: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition (Test-Path -LiteralPath $detailPath -PathType Leaf) -Message "Plugin v3 detail file missing: $($plugin.detail_url)"
 
     $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
-    Assert-RegistryCondition -Condition ([string]$detail.plugin_id -eq [string]$plugin.plugin_id) -Message "Plugin v2 detail id mismatch: $($plugin.plugin_id)"
+    $pluginDetailsV3[[string]$plugin.plugin_id] = $detail
+    Assert-RegistryCondition -Condition ([string]$detail.plugin_id -eq [string]$plugin.plugin_id) -Message "Plugin v3 detail id mismatch: $($plugin.plugin_id)"
 
     $versions = @($detail.versions)
-    Assert-RegistryCondition -Condition ($versions.Count -gt 0) -Message "Plugin v2 detail has no versions: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition ($versions.Count -gt 0) -Message "Plugin v3 detail has no versions: $($plugin.plugin_id)"
     Assert-UniqueValues -Values @($versions | ForEach-Object { $_.version }) -Name "plugin version for $($plugin.plugin_id)"
 
     $versionNames = @($versions | ForEach-Object { [string]$_.version })
-    Assert-RegistryCondition -Condition ([string]$plugin.latest_version -in $versionNames) -Message "Plugin v2 latest_version missing from detail versions: $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition ([string]$plugin.latest_version -in $versionNames) -Message "Plugin v3 latest_version missing from detail versions: $($plugin.plugin_id)"
 
     foreach ($version in $versions) {
+        Assert-RegistryCondition -Condition (Test-JsonProperty -Object $version -Name "api_version") -Message "Plugin v3 version missing api_version: $($plugin.plugin_id) $($version.version)"
+        Assert-RegistryCondition -Condition ([int]$version.api_version -gt 0) -Message "Plugin v3 version has invalid api_version: $($plugin.plugin_id) $($version.version)"
+        if (-not [string]::IsNullOrWhiteSpace([string]$version.min_app_version)) {
+            [void](ConvertTo-VersionCode ([string]$version.min_app_version))
+        }
         Assert-DownloadFile `
             -UrlOrPath ([string]$version.download_url) `
             -ExpectedSize ([long]$version.file_size) `
             -ExpectedHash ([string]$version.file_hash) `
-            -RequireTinaplugManifest
+            -RequireTinaplugManifest `
+            -ExpectedPluginId ([string]$plugin.plugin_id) `
+            -ExpectedPluginVersion $version
+    }
+}
+
+$legacyHostVersion = [string]$pluginsIndexV2.compatibility.host_version
+$legacyApiVersion = [int]$pluginsIndexV2.compatibility.api_version
+[void](ConvertTo-VersionCode $legacyHostVersion)
+foreach ($plugin in $legacyPluginCatalog) {
+    Assert-LightweightPluginCatalogEntry -Plugin $plugin
+    Assert-RegistryCondition `
+        -Condition ($pluginDetailsV3.ContainsKey([string]$plugin.plugin_id)) `
+        -Message "Plugin v2 entry missing from v3 catalog: $($plugin.plugin_id)"
+    $detailPath = Resolve-RegistryFile -UrlOrPath ([string]$plugin.detail_url)
+    Assert-RegistryCondition -Condition ($null -ne $detailPath -and (Test-Path -LiteralPath $detailPath -PathType Leaf)) -Message "Plugin v2 detail missing: $($plugin.plugin_id)"
+    $detail = Get-Content -Raw -Encoding UTF8 $detailPath | ConvertFrom-Json
+    $versions = @($detail.versions)
+    Assert-RegistryCondition -Condition ($versions.Count -gt 0) -Message "Plugin v2 detail has no compatible versions: $($plugin.plugin_id)"
+    Assert-UniqueValues -Values @($versions | ForEach-Object { $_.version }) -Name "plugin v2 version for $($plugin.plugin_id)"
+    Assert-RegistryCondition -Condition ([string]$plugin.latest_version -eq [string]$versions[0].version) -Message "Plugin v2 latest_version is not the highest compatible version: $($plugin.plugin_id)"
+    $fullVersionNames = @($pluginDetailsV3[[string]$plugin.plugin_id].versions | ForEach-Object { [string]$_.version })
+    foreach ($version in $versions) {
+        Assert-RegistryCondition -Condition ([string]$version.version -in $fullVersionNames) -Message "Plugin v2 version missing from v3 history: $($plugin.plugin_id) $($version.version)"
+        Assert-RegistryCondition -Condition ([int]$version.api_version -eq $legacyApiVersion) -Message "Plugin v2 exposes unsupported api_version: $($plugin.plugin_id) $($version.version)"
+        if (-not [string]::IsNullOrWhiteSpace([string]$version.min_app_version)) {
+            Assert-RegistryCondition `
+                -Condition ((ConvertTo-VersionCode ([string]$version.min_app_version)) -le (ConvertTo-VersionCode $legacyHostVersion)) `
+                -Message "Plugin v2 exposes version requiring a newer host: $($plugin.plugin_id) $($version.version)"
+        }
     }
 }
 
@@ -391,13 +524,16 @@ if ($AllowLegacyV1) {
     $packagesIndex = Get-Content -Raw -Encoding UTF8 $packagesIndexPath | ConvertFrom-Json
     $legacyPlugins = @($pluginsIndex.plugins)
     $legacyPackages = @($packagesIndex.packages)
-    Assert-RegistryCondition -Condition ($legacyPlugins.Count -eq $pluginCatalog.Count) -Message "Legacy plugin index count does not match v2 catalog"
+    Assert-RegistryCondition -Condition ($legacyPlugins.Count -eq $legacyPluginCatalog.Count) -Message "Legacy plugin index count does not match v2 catalog"
     Assert-RegistryCondition -Condition ($legacyPackages.Count -eq $packageCatalog.Count) -Message "Legacy package index count does not match v2 catalog"
 }
+
+Invoke-PluginContractValidation
+Assert-LinuxDistroManifest
 
 if (-not $SkipGitDiffCheck) {
     $diff = git -C $registryRoot status --porcelain
     Assert-RegistryCondition -Condition ([string]::IsNullOrWhiteSpace(($diff -join "`n"))) -Message "Registry build produced uncommitted changes."
 }
 
-Write-Host ("Registry validation passed: plugins={0}, packages={1}, legacyV1={2}" -f $pluginCatalog.Count, $packageCatalog.Count, [bool]$AllowLegacyV1)
+Write-Host ("Registry validation passed: pluginsV3={0}, pluginsV2={1}, packages={2}, legacyV1={3}" -f $pluginCatalog.Count, $legacyPluginCatalog.Count, $packageCatalog.Count, [bool]$AllowLegacyV1)

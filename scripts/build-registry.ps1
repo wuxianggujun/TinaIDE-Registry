@@ -50,6 +50,17 @@ function ConvertTo-VersionCode {
     return ($major * 10000) + ($minor * 100) + $patch
 }
 
+function Assert-VersionText {
+    param(
+        [Parameter(Mandatory = $true)][string]$Version,
+        [Parameter(Mandatory = $true)][string]$Name
+    )
+
+    if ($Version -notmatch '^\d+(?:\.\d+){0,2}(?:-[0-9A-Za-z.-]+)?$') {
+        throw "Invalid ${Name}: $Version"
+    }
+}
+
 function ConvertTo-IsoDateText {
     param([Parameter(Mandatory = $true)]$Value)
 
@@ -112,6 +123,99 @@ function Add-OptionalField {
     }
 
     $Target[$Name] = $Value
+}
+
+function ConvertTo-PluginVersionEntry {
+    param([Parameter(Mandatory = $true)]$Version)
+
+    $apiVersion = if ($null -ne $Version.PSObject.Properties["api_version"]) {
+        [int]$Version.api_version
+    } else {
+        1
+    }
+    $entry = [ordered]@{
+        version = [string]$Version.version
+        version_code = [int]$Version.version_code
+        file_size = [long]$Version.file_size
+        file_hash = [string]$Version.file_hash
+        download_url = [string]$Version.download_url
+        api_version = $apiVersion
+        changelog = [string]$Version.changelog
+        created_at = ConvertTo-IsoDateText $Version.created_at
+    }
+    Add-OptionalField -Target $entry -Name "min_app_version" -Value (Get-OptionalString $Version.min_app_version)
+    return $entry
+}
+
+function Test-PluginVersionCompatible {
+    param(
+        [Parameter(Mandatory = $true)]$Version,
+        [Parameter(Mandatory = $true)][string]$HostVersion,
+        [Parameter(Mandatory = $true)][int]$ApiVersion
+    )
+
+    if ([int]$Version.api_version -ne $ApiVersion) {
+        return $false
+    }
+    $minAppVersion = Get-OptionalString $Version.min_app_version
+    if ($null -eq $minAppVersion) {
+        return $true
+    }
+    Assert-VersionText -Version $minAppVersion -Name "plugin min_app_version"
+    return (ConvertTo-VersionCode $minAppVersion) -le (ConvertTo-VersionCode $HostVersion)
+}
+
+function New-PluginDetailEntry {
+    param(
+        [Parameter(Mandatory = $true)]$Manifest,
+        [Parameter(Mandatory = $true)]$Metadata,
+        [Parameter(Mandatory = $true)][object[]]$Versions
+    )
+
+    return [ordered]@{
+        id = [string]$Manifest.id
+        plugin_id = [string]$Manifest.id
+        name = [string]$Manifest.name
+        description = [string]$Manifest.description
+        category = [string]$Metadata.category
+        tags = @($Metadata.tags)
+        repository_url = [string]$Metadata.repository_url
+        homepage_url = [string]$Metadata.homepage_url
+        license = [string]$Metadata.license
+        publisher = [ordered]@{
+            id = [string]$Metadata.publisher.id
+            display_name = [string]$Metadata.publisher.display_name
+        }
+        versions = @($Versions)
+        created_at = ConvertTo-IsoDateText $Metadata.created_at
+        updated_at = ConvertTo-IsoDateText $Metadata.updated_at
+    }
+}
+
+function New-PluginCatalogEntry {
+    param(
+        [Parameter(Mandatory = $true)]$Manifest,
+        [Parameter(Mandatory = $true)]$Metadata,
+        [Parameter(Mandatory = $true)][string]$LatestVersion,
+        [Parameter(Mandatory = $true)][string]$DetailUrl
+    )
+
+    return [ordered]@{
+        id = [string]$Manifest.id
+        plugin_id = [string]$Manifest.id
+        name = [string]$Manifest.name
+        description = [string]$Manifest.description
+        category = [string]$Metadata.category
+        tags = @($Metadata.tags)
+        publisher = [ordered]@{
+            id = [string]$Metadata.publisher.id
+            display_name = [string]$Metadata.publisher.display_name
+        }
+        latest_version = $LatestVersion
+        detail_url = $DetailUrl
+        created_at = ConvertTo-IsoDateText $Metadata.created_at
+        updated_at = ConvertTo-IsoDateText $Metadata.updated_at
+    }
 }
 
 function Get-PackageArtifactType {
@@ -352,8 +456,14 @@ New-Item -ItemType Directory -Force -Path $buildRoot | Out-Null
 $pluginMetadata = Get-Content -Raw -Encoding UTF8 (Join-Path $registryRoot "metadata/plugins.json") |
     ConvertFrom-Json
 
-$pluginEntries = @()
-$pluginCatalogEntries = @()
+$legacyHostVersion = [string]$pluginMetadata.compatibility.legacy_v2_host_version
+$legacyApiVersion = [int]$pluginMetadata.compatibility.legacy_v2_api_version
+Assert-VersionText -Version $legacyHostVersion -Name "legacy_v2_host_version"
+
+$pluginEntriesV2 = @()
+$pluginCatalogEntriesV2 = @()
+$pluginEntriesV3 = @()
+$pluginCatalogEntriesV3 = @()
 foreach ($item in @($pluginMetadata.plugins)) {
     $sourceDir = Join-Path $registryRoot $item.source
     $manifestPath = Join-Path $sourceDir "manifest.json"
@@ -364,75 +474,112 @@ foreach ($item in @($pluginMetadata.plugins)) {
     $manifest = Get-Content -Raw -Encoding UTF8 $manifestPath | ConvertFrom-Json
     $pluginId = [string]$manifest.id
     $version = [string]$manifest.version
+    $apiVersion = if ($null -ne $manifest.PSObject.Properties["apiVersion"]) { [int]$manifest.apiVersion } else { 1 }
+    $minAppVersion = Get-OptionalString $manifest.minAppVersion
+    Assert-VersionText -Version $version -Name "plugin version for $pluginId"
+    if ($null -ne $minAppVersion) {
+        Assert-VersionText -Version $minAppVersion -Name "plugin minAppVersion for $pluginId"
+    }
     $outputDir = Join-Path $registryRoot ("plugins/{0}/{1}" -f $pluginId, $version)
     $outputFile = Join-Path $outputDir ("{0}.tinaplug" -f $pluginId)
+    $candidateFile = Join-Path $buildRoot ("{0}-{1}.tinaplug" -f $pluginId, $version)
 
     New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
-    New-TinaPlugArchive -SourceDir $sourceDir -OutputFile $outputFile
+    New-TinaPlugArchive -SourceDir $sourceDir -OutputFile $candidateFile
+    if (Test-Path -LiteralPath $outputFile -PathType Leaf) {
+        $existingHash = Get-FileSha256 $outputFile
+        $candidateHash = Get-FileSha256 $candidateFile
+        if ($existingHash -ne $candidateHash) {
+            Remove-Item -LiteralPath $candidateFile -Force
+            throw "Immutable plugin release changed without a version bump: $pluginId $version"
+        }
+        Remove-Item -LiteralPath $candidateFile -Force
+    } else {
+        Move-Item -LiteralPath $candidateFile -Destination $outputFile
+    }
 
     $archive = Get-Item -LiteralPath $outputFile
-    $pluginEntry = [ordered]@{
-        id = $pluginId
-        plugin_id = $pluginId
-        name = [string]$manifest.name
-        description = [string]$manifest.description
-        category = [string]$item.category
-        tags = @($item.tags)
-        repository_url = [string]$item.repository_url
-        homepage_url = [string]$item.homepage_url
-        license = [string]$item.license
-        publisher = [ordered]@{
-            id = [string]$item.publisher.id
-            display_name = [string]$item.publisher.display_name
-        }
-        versions = @(
-            [ordered]@{
-                version = $version
-                version_code = ConvertTo-VersionCode $version
-                file_size = $archive.Length
-                file_hash = "sha256:{0}" -f (Get-FileSha256 $archive.FullName)
-                download_url = "plugins/{0}/{1}/{0}.tinaplug" -f $pluginId, $version
-                changelog = [string]$item.changelog
-                created_at = ConvertTo-IsoDateText $item.updated_at
-            }
-        )
-        created_at = ConvertTo-IsoDateText $item.created_at
-        updated_at = ConvertTo-IsoDateText $item.updated_at
+    $currentVersionEntry = [ordered]@{
+        version = $version
+        version_code = ConvertTo-VersionCode $version
+        file_size = $archive.Length
+        file_hash = "sha256:{0}" -f (Get-FileSha256 $archive.FullName)
+        download_url = "plugins/{0}/{1}/{0}.tinaplug" -f $pluginId, $version
+        api_version = $apiVersion
+        changelog = [string]$item.changelog
+        created_at = ConvertTo-IsoDateText $item.updated_at
     }
-    $pluginEntries += $pluginEntry
-    $pluginCatalogEntries += [ordered]@{
-        id = $pluginId
-        plugin_id = $pluginId
-        name = [string]$manifest.name
-        description = [string]$manifest.description
-        category = [string]$item.category
-        tags = @($item.tags)
-        publisher = [ordered]@{
-            id = [string]$item.publisher.id
-            display_name = [string]$item.publisher.display_name
-        }
-        latest_version = $version
-        detail_url = "plugins/{0}/plugin.json" -f $pluginId
-        created_at = ConvertTo-IsoDateText $item.created_at
-        updated_at = ConvertTo-IsoDateText $item.updated_at
-    }
+    Add-OptionalField -Target $currentVersionEntry -Name "min_app_version" -Value $minAppVersion
 
-    Write-Utf8NoBom `
-        -Path (Join-Path $registryRoot ("plugins/{0}/plugin.json" -f $pluginId)) `
-        -Content (ConvertTo-JsonText $pluginEntry)
+    $detailV3Path = Join-Path $registryRoot ("plugins/{0}/plugin.v3.json" -f $pluginId)
+    $detailV2Path = Join-Path $registryRoot ("plugins/{0}/plugin.json" -f $pluginId)
+    $priorDetailPath = if (Test-Path -LiteralPath $detailV3Path -PathType Leaf) {
+        $detailV3Path
+    } elseif (Test-Path -LiteralPath $detailV2Path -PathType Leaf) {
+        $detailV2Path
+    } else {
+        $null
+    }
+    $priorVersions = if ($null -ne $priorDetailPath) {
+        @((Get-Content -Raw -Encoding UTF8 $priorDetailPath | ConvertFrom-Json).versions) |
+            Where-Object { [string]$_.version -ne $version } |
+            ForEach-Object { ConvertTo-PluginVersionEntry $_ }
+    } else {
+        @()
+    }
+    $allVersions = @(@($currentVersionEntry) + @($priorVersions))
+    $allVersions = @($allVersions |
+        Sort-Object -Property @{ Expression = { [int]$_.version_code }; Descending = $true }, @{ Expression = { [string]$_.version }; Descending = $true })
+    $legacyVersions = @($allVersions | Where-Object {
+        Test-PluginVersionCompatible -Version $_ -HostVersion $legacyHostVersion -ApiVersion $legacyApiVersion
+    })
+
+    $pluginEntryV3 = New-PluginDetailEntry -Manifest $manifest -Metadata $item -Versions $allVersions
+    $pluginEntriesV3 += $pluginEntryV3
+    $pluginCatalogEntriesV3 += New-PluginCatalogEntry `
+        -Manifest $manifest `
+        -Metadata $item `
+        -LatestVersion ([string]($allVersions[0].version)) `
+        -DetailUrl ("plugins/{0}/plugin.v3.json" -f $pluginId)
+    Write-Utf8NoBom -Path $detailV3Path -Content (ConvertTo-JsonText $pluginEntryV3)
+
+    if ($legacyVersions.Count -gt 0) {
+        $pluginEntryV2 = New-PluginDetailEntry -Manifest $manifest -Metadata $item -Versions $legacyVersions
+        $pluginEntriesV2 += $pluginEntryV2
+        $pluginCatalogEntriesV2 += New-PluginCatalogEntry `
+            -Manifest $manifest `
+            -Metadata $item `
+            -LatestVersion ([string]($legacyVersions[0].version)) `
+            -DetailUrl ("plugins/{0}/plugin.json" -f $pluginId)
+        Write-Utf8NoBom -Path $detailV2Path -Content (ConvertTo-JsonText $pluginEntryV2)
+    } else {
+        Remove-RegistryFileIfExists -Path $detailV2Path
+    }
 }
 
 $pluginsIndexV2 = [ordered]@{
     schema_version = 2
-    plugins = @($pluginCatalogEntries)
+    compatibility = [ordered]@{
+        host_version = $legacyHostVersion
+        api_version = $legacyApiVersion
+    }
+    plugins = @($pluginCatalogEntriesV2)
 }
 Write-Utf8NoBom `
     -Path (Join-Path $registryRoot "plugins/index.v2.json") `
     -Content (ConvertTo-JsonText $pluginsIndexV2)
 
+$pluginsIndexV3 = [ordered]@{
+    schema_version = 3
+    plugins = @($pluginCatalogEntriesV3)
+}
+Write-Utf8NoBom `
+    -Path (Join-Path $registryRoot "plugins/index.v3.json") `
+    -Content (ConvertTo-JsonText $pluginsIndexV3)
+
 if ($IncludeLegacyV1) {
     $pluginsIndex = [ordered]@{
-        plugins = @($pluginEntries)
+        plugins = @($pluginEntriesV2)
     }
     Write-Utf8NoBom `
         -Path (Join-Path $registryRoot "plugins/index.json") `
@@ -567,7 +714,7 @@ if ($IncludeLegacyV1) {
 }
 
 if ($IncludeLegacyV1) {
-    Write-Host "Registry indexes rebuilt, including legacy v1 compatibility indexes."
+    Write-Host "Registry indexes rebuilt, including v2/v3 plugin and legacy v1 compatibility indexes."
 } else {
-    Write-Host "Registry indexes rebuilt for v2-only clients."
+    Write-Host "Registry indexes rebuilt with v2 compatibility and v3 plugin views."
 }

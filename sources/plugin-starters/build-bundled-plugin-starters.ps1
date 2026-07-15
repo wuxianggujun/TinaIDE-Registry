@@ -21,37 +21,9 @@ function Get-ArchiveRelativePath {
     try {
         return ([System.IO.Path]::GetRelativePath($BasePath, $FilePath)).Replace("\", "/")
     } catch {
-        $baseUri = [Uri]($BasePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar)
+        $baseUri = [Uri]($BasePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar)
         return [Uri]::UnescapeDataString($baseUri.MakeRelativeUri([Uri]$FilePath).ToString())
     }
-}
-
-function Get-Crc32 {
-    param([Parameter(Mandatory = $true)][byte[]]$Bytes)
-
-    if ($null -eq $script:Crc32Table) {
-        $mask = [uint64]4294967295
-        $polynomial = [uint64]3988292384
-        $script:Crc32Table = @(for ($i = 0; $i -lt 256; $i++) {
-            $crc = [uint32]$i
-            for ($bit = 0; $bit -lt 8; $bit++) {
-                if (($crc -band 1) -ne 0) {
-                    $crc = [uint32]((([uint64]$crc -shr 1) -bxor $polynomial) -band $mask)
-                } else {
-                    $crc = [uint32](([uint64]$crc -shr 1) -band $mask)
-                }
-            }
-            $crc
-        })
-    }
-
-    $mask = [uint64]4294967295
-    $value = [uint32]4294967295
-    foreach ($byte in $Bytes) {
-        $index = [int](($value -bxor [uint32]$byte) -band 0xFF)
-        $value = [uint32]((([uint64]$value -shr 8) -bxor [uint64]$script:Crc32Table[$index]) -band $mask)
-    }
-    return [uint32](([uint64]$value -bxor $mask) -band $mask)
 }
 
 function Read-ArchiveEntryBytes {
@@ -59,16 +31,13 @@ function Read-ArchiveEntryBytes {
 
     $textExtensions = @(
         ".json", ".md", ".txt", ".ps1", ".sh", ".lua", ".xml", ".properties",
-        ".gradle", ".kts", ".kt", ".java", ".c", ".cpp", ".h", ".hpp", ".cmake",
-        ".pc"
+        ".gradle", ".kts", ".kt", ".java", ".c", ".cpp", ".h", ".hpp", ".cmake", ".pc"
     )
-
     if ($File.Extension.ToLowerInvariant() -in $textExtensions) {
         $text = [System.IO.File]::ReadAllText($File.FullName, [System.Text.Encoding]::UTF8)
         $normalized = $text -replace "`r`n", "`n" -replace "`r", "`n"
         return [System.Text.Encoding]::UTF8.GetBytes($normalized)
     }
-
     return [System.IO.File]::ReadAllBytes($File.FullName)
 }
 
@@ -78,95 +47,41 @@ function New-DeterministicZip {
         [Parameter(Mandatory = $true)][string]$OutputFile
     )
 
+    Add-Type -AssemblyName System.IO.Compression
     if (Test-Path -LiteralPath $OutputFile) {
         Remove-Item -LiteralPath $OutputFile -Force
     }
-
     $sourcePath = (Resolve-Path -LiteralPath $SourceDir).Path
-    $entries = Get-ChildItem -LiteralPath $sourcePath -File -Recurse -Force |
-        ForEach-Object {
-            [pscustomobject]@{
-                File = $_
-                RelativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
-            }
-        } |
-        Sort-Object -Property RelativePath
-
-    $outputParent = Split-Path -Parent $OutputFile
-    if ($outputParent) {
-        New-Item -ItemType Directory -Force -Path $outputParent | Out-Null
-    }
-
-    $stream = [System.IO.File]::Open($OutputFile, [System.IO.FileMode]::CreateNew, [System.IO.FileAccess]::Write)
-    $writer = [System.IO.BinaryWriter]::new($stream, [System.Text.Encoding]::UTF8)
-    $centralRecords = @()
-    $dosTime = [uint16]0
-    $dosDate = [uint16]0x5021
-    $utf8Flag = [uint16]0x0800
+    $stream = [System.IO.File]::Open($OutputFile, [System.IO.FileMode]::CreateNew)
+    $archive = [System.IO.Compression.ZipArchive]::new(
+        $stream,
+        [System.IO.Compression.ZipArchiveMode]::Create,
+        $false,
+        [System.Text.Encoding]::UTF8
+    )
     try {
-        foreach ($entry in $entries) {
-            $data = Read-ArchiveEntryBytes -File $entry.File
-            $nameBytes = [System.Text.Encoding]::UTF8.GetBytes($entry.RelativePath)
-            $crc = Get-Crc32 -Bytes $data
-            $size = [uint32]$data.Length
-            $offset = [uint32]$stream.Position
-
-            $writer.Write([uint32]0x04034B50)
-            $writer.Write([uint16]20)
-            $writer.Write($utf8Flag)
-            $writer.Write([uint16]0)
-            $writer.Write($dosTime)
-            $writer.Write($dosDate)
-            $writer.Write($crc)
-            $writer.Write($size)
-            $writer.Write($size)
-            $writer.Write([uint16]$nameBytes.Length)
-            $writer.Write([uint16]0)
-            $writer.Write([byte[]]$nameBytes)
-            $writer.Write([byte[]]$data)
-
-            $centralRecords += [pscustomobject]@{
-                NameBytes = $nameBytes
-                Crc = $crc
-                Size = $size
-                Offset = $offset
+        Get-ChildItem -LiteralPath $sourcePath -File -Recurse -Force |
+            ForEach-Object {
+                [pscustomobject]@{
+                    File = $_
+                    RelativePath = Get-ArchiveRelativePath -BasePath $sourcePath -FilePath $_.FullName
+                }
+            } |
+            Sort-Object -Property RelativePath |
+            ForEach-Object {
+                $entry = $archive.CreateEntry($_.RelativePath, [System.IO.Compression.CompressionLevel]::NoCompression)
+                $entry.LastWriteTime = [DateTimeOffset]::new(2020, 1, 1, 0, 0, 0, [TimeSpan]::Zero)
+                $entry.ExternalAttributes = 0
+                $entryStream = $entry.Open()
+                try {
+                    $bytes = Read-ArchiveEntryBytes -File $_.File
+                    $entryStream.Write($bytes, 0, $bytes.Length)
+                } finally {
+                    $entryStream.Dispose()
+                }
             }
-        }
-
-        $centralOffset = [uint32]$stream.Position
-        foreach ($record in $centralRecords) {
-            $writer.Write([uint32]0x02014B50)
-            $writer.Write([uint16]20)
-            $writer.Write([uint16]20)
-            $writer.Write($utf8Flag)
-            $writer.Write([uint16]0)
-            $writer.Write($dosTime)
-            $writer.Write($dosDate)
-            $writer.Write([uint32]$record.Crc)
-            $writer.Write([uint32]$record.Size)
-            $writer.Write([uint32]$record.Size)
-            $writer.Write([uint16]$record.NameBytes.Length)
-            $writer.Write([uint16]0)
-            $writer.Write([uint16]0)
-            $writer.Write([uint16]0)
-            $writer.Write([uint16]0)
-            $writer.Write([uint32]0)
-            $writer.Write([uint32]$record.Offset)
-            $writer.Write([byte[]]$record.NameBytes)
-        }
-        $centralSize = [uint32]($stream.Position - $centralOffset)
-        $entryCount = [uint16]$centralRecords.Count
-
-        $writer.Write([uint32]0x06054B50)
-        $writer.Write([uint16]0)
-        $writer.Write([uint16]0)
-        $writer.Write($entryCount)
-        $writer.Write($entryCount)
-        $writer.Write($centralSize)
-        $writer.Write($centralOffset)
-        $writer.Write([uint16]0)
     } finally {
-        $writer.Dispose()
+        $archive.Dispose()
         $stream.Dispose()
     }
 }

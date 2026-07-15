@@ -19,10 +19,12 @@
 5. 需要离线分发时，再运行 `pack.ps1` 或 `pack.sh`
 6. 用“设置 → 插件 → 从文件安装”验证生成的 `.tinaplug`
 
+首次安装后插件默认禁用。进入“设置 → 插件”详情页检查贡献内容，再明确启用；安装或列表刷新不会自动启动新插件。
+
 ## 当前能力边界
 
-- `editor/context` 与 `filetree/context` 已可用
-- `editor/toolbar`、`keybindings` 不建议在第一版模板中使用
+- `editor/context`、`editor/toolbar` 与 `filetree/context` 已可用
+- `keybindings` 已可用；第一版模板默认不启用，可按需添加 keybindings 文件
 - 纯 `config` 插件没有 Lua 运行时，菜单命令通常只能绑定宿主内置命令
 - `contributions.commands` 只提供菜单标题，不会自动生成可执行逻辑
 

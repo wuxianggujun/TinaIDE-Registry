@@ -199,6 +199,38 @@ def main() -> int:
             "networkHosts is declared without network.fetch or network.unrestricted."
         )
 
+    locales = manifest.get("locales")
+    if locales is not None:
+        if not isinstance(locales, dict):
+            add_error("manifest.locales must be an object.")
+        else:
+            locale_files = locales.get("files")
+            if not isinstance(locale_files, dict) or not locale_files:
+                add_error("manifest.locales.files must be a non-empty object.")
+            else:
+                for locale_key, locale_path in locale_files.items():
+                    locale_key_text = as_text(locale_key)
+                    locale_path_text = as_text(locale_path)
+                    if not locale_key_text:
+                        add_error("manifest.locales.files contains an empty locale key.")
+                    if not is_safe_relative_path(locale_path_text) or not locale_path_text.replace("\\", "/").startswith("locales/"):
+                        add_error(f"manifest.locales.files['{locale_key_text}'] must point to locales/*.json: {locale_path_text or '<empty>'}")
+                        continue
+                    locale_file = plugin_root / locale_path_text
+                    if not locale_file.is_file():
+                        add_error(f"Locale file does not exist: {locale_path_text}")
+                        continue
+                    try:
+                        locale_data = load_json(locale_file)
+                    except json.JSONDecodeError as exc:
+                        add_error(
+                            f"Locale file is not valid JSON: {locale_path_text} "
+                            f"({exc.msg}, line {exc.lineno}, column {exc.colno})."
+                        )
+                        continue
+                    if not isinstance(locale_data, dict):
+                        add_error(f"Locale file must contain a JSON object: {locale_path_text}")
+
     def require_safe_path(path_value: object, field_name: str, *, must_exist: bool) -> None:
         text = as_text(path_value)
         if not is_safe_relative_path(text):
@@ -218,7 +250,7 @@ def main() -> int:
         require_safe_path(snippet_path, "contributions.snippets[]", must_exist=True)
 
     for keybinding_path in as_list(contributions.get("keybindings")):
-        require_safe_path(keybinding_path, "contributions.keybindings[]", must_exist=False)
+        require_safe_path(keybinding_path, "contributions.keybindings[]", must_exist=True)
 
     for index, template in enumerate(as_list(contributions.get("projectTemplates")), start=1):
         if not isinstance(template, dict):
@@ -328,9 +360,6 @@ def main() -> int:
     inspect_menu_items("editor/toolbar", menus.get("editor/toolbar"), editor_when_expressions)
     inspect_menu_items("filetree/context", menus.get("filetree/context"), filetree_when_expressions)
 
-    if as_list(menus.get("editor/toolbar")):
-        add_warning("editor/toolbar is declared but the host does not support it yet.")
-
     if supports_runtime_plugin_commands and not has_command_execute:
         custom_command_ids = sorted(declared_custom_command_ids | custom_menu_command_ids)
         if custom_command_ids:
@@ -339,8 +368,51 @@ def main() -> int:
                 + ", ".join(custom_command_ids)
             )
 
-    if as_list(contributions.get("panels")):
-        add_warning("contributions.panels is declared but panels are not supported yet.")
+    panels = as_list(contributions.get("panels"))
+    if panels and plugin_type not in {"script", "hybrid"}:
+        add_error("contributions.panels is supported only for script or hybrid plugins.")
+    if len(panels) > 16:
+        add_error("A plugin may declare at most 16 panels.")
+    panel_ids: list[str] = []
+    for index, panel in enumerate(panels, start=1):
+        if not isinstance(panel, dict):
+            add_error(f"contributions.panels[{index}] must be an object.")
+            continue
+        panel_id = as_text(panel.get("id"))
+        panel_title = as_text(panel.get("title"))
+        if not panel_id or len(panel_id) > 128 or not PLUGIN_ID_PATTERN.fullmatch(panel_id):
+            add_error(f"contributions.panels[{index}].id is invalid: {panel_id or '<empty>'}")
+        else:
+            panel_ids.append(panel_id)
+        if not panel_title or len(panel_title) > 128:
+            add_error(f"contributions.panels[{index}].title is required and must not exceed 128 characters.")
+    duplicate_panel_ids = find_duplicates(panel_ids)
+    if duplicate_panel_ids:
+        add_error("Duplicate panel id(s) detected: " + ", ".join(duplicate_panel_ids))
+
+    activation_events = [as_text(item) for item in as_list(manifest.get("activationEvents"))]
+    if activation_events and plugin_type != "lsp":
+        add_error("manifest.activationEvents is supported only for LSP plugins.")
+    duplicate_activation_events = find_duplicates(activation_events)
+    if duplicate_activation_events:
+        add_error("Duplicate activation event(s) detected: " + ", ".join(duplicate_activation_events))
+    contributed_languages = {
+        as_text(language)
+        for server in as_list(contributions.get("languageServers"))
+        if isinstance(server, dict)
+        for language in as_list(server.get("languages"))
+        if as_text(language)
+    }
+    for event in activation_events:
+        match = re.fullmatch(r"onLanguage:([a-zA-Z0-9][a-zA-Z0-9._+-]*)", event)
+        if match is None:
+            add_error(
+                f"Unsupported activation event '{event}'. apiVersion 1 supports only onLanguage:<languageId>."
+            )
+        elif match.group(1) not in contributed_languages:
+            add_error(
+                f"Activation event language '{match.group(1)}' is not declared in contributions.languageServers."
+            )
 
     for index, icon in enumerate(as_list(contributions.get("fileIcons")), start=1):
         if not isinstance(icon, dict):

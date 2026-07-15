@@ -2,35 +2,38 @@
 
 [![爱发电](https://img.shields.io/badge/%E7%88%B1%E5%8F%91%E7%94%B5-%E6%94%AF%E6%8C%81%E5%BC%80%E6%BA%90-946ce6?style=flat-square)](https://ifdian.net/a/wuxianggujun)
 
-## Registry v2 索引
+## 插件 v2/v3 与依赖包 v2
 
-当前 Registry 默认只发布 v2 轻量索引和单项详情文件：
+当前 Registry 默认发布：
 
 ```text
+plugins/index.v3.json
+plugins/<plugin-id>/plugin.v3.json
 plugins/index.v2.json
 plugins/<plugin-id>/plugin.json
 packages/index.v2.json
 packages/<package-id>/package.json
 ```
 
-Android 客户端优先读取 `index.v2.json`。列表页只下载轻量摘要；
-打开详情、安装插件、检查更新或安装依赖包时，再按需读取单个
-`plugin.json` / `package.json`。Android 主干已经移除旧 `index.json`
-fallback；v2 文件不存在、请求失败或解析失败时会直接暴露 Registry 发布问题。
+`0.18.11+` Android 客户端读取插件 v3，并从完整历史中按 Plugin API 与
+`min_app_version` 选择最高兼容版本。旧 IDE 读取插件 v2；该视图只包含
+`0.17.11 + Plugin API v1` 可用版本。依赖包继续读取 v2。v2/v3 只改变索引视图，
+引用的是同一套不可覆盖的 `.tinaplug`，不会为不同 IDE 构建两份插件。
 
-`scripts/build-registry.ps1` 默认生成 v2-only 产物；确实需要服务旧客户端时，
+Android 主干已经移除旧 `index.json` fallback；任何当前索引不存在、请求失败或解析
+失败都会直接暴露 Registry 发布问题。确实需要服务更旧客户端时，
 可以显式加 `-IncludeLegacyV1` 生成 `plugins/index.json` / `packages/index.json`。
-`scripts/validate-registry.ps1` 默认要求旧 v1 索引不存在，并校验 v2 的
-`detail_url`、详情文件、下载文件、hash 和轻量字段边界。
+`scripts/validate-registry.ps1` 默认要求旧 v1 索引不存在，并校验 v2 是 v3 的兼容
+子集、包内 manifest 与版本元数据一致、历史同版本制品没有被覆盖。
 
 ## 协议生命周期
 
-v2 是当前主协议。旧 v1 全量索引只适用于历史客户端，不再默认生成、校验或发布。
+插件 v3 是当前主协议，插件 v2 是旧宿主兼容视图，依赖包保持 v2。旧 v1 全量索引
+只适用于历史客户端，不再默认生成、校验或发布。
 
 - `0.17.11`：Android 客户端引入 v2 优先读取，并把 v1 fallback 标记为废弃兼容层。
-- `0.18.x` / `0.19.x`：迁移窗口，Registry 继续生成 v2 与 v1 两套产物。
-- `0.20.0` 起：Android 客户端删除 v1 fallback 代码；
-  Registry 默认停止生成 `plugins/index.json` / `packages/index.json`。
+- `0.18.0`：Android 客户端删除 v1 fallback；Registry 默认停止生成 v1。
+- `0.18.11`：插件客户端切换到 v3 兼容选择；v2 固定为旧宿主安全子集。
 
 如需临时兼容旧客户端，可以使用 `build-registry.ps1 -IncludeLegacyV1` 与
 `validate-registry.ps1 -AllowLegacyV1`。
@@ -59,7 +62,9 @@ https://cdn.jsdelivr.net/gh/wuxianggujun/TinaIDE-Registry@main
 
 ```text
 plugins/index.v2.json                      # 插件市场 v2 轻量索引
-plugins/<plugin-id>/plugin.json            # 单个插件详情和版本历史
+plugins/<plugin-id>/plugin.json            # 旧宿主兼容版本历史
+plugins/index.v3.json                      # 插件市场 v3 轻量索引
+plugins/<plugin-id>/plugin.v3.json         # 完整版本历史与兼容元数据
 plugins/<plugin-id>/<version>/*.tinaplug   # 插件发布包
 packages/index.v2.json                     # 依赖包市场 v2 轻量索引
 packages/<package-id>/package.json         # 单个依赖包详情、版本和下载信息
@@ -82,7 +87,8 @@ pwsh ./scripts/build-registry.ps1
 - 重新构建官方插件脚手架 zip。
 - 将 `sources/plugins/**` 打包成 `.tinaplug`。
 - 计算插件包和依赖包的 `sha256` 与文件大小。
-- 重写 `plugins/index.v2.json`、`packages/index.v2.json` 和详情文件。
+- 重写插件 v2/v3、依赖包 v2 和对应详情文件。
+- 拒绝用不同内容覆盖已存在的同版本 `.tinaplug`。
 - 默认移除旧 `plugins/index.json` / `packages/index.json`；如需旧客户端兼容，
   显式加 `-IncludeLegacyV1`。
 
@@ -96,8 +102,10 @@ pwsh ./scripts/validate-registry.ps1
 
 - 插件 ID、包 ID、版本号不能重复。
 - `.tinaplug` 根目录必须包含 `manifest.json`。
-- `plugins/index.v2.json` / `packages/index.v2.json` 的 `detail_url` 必须指向真实详情文件。
-- v2 轻量索引不能混入下载地址、checksum、release notes 等重字段。
+- 插件 v2/v3 与依赖包 v2 的 `detail_url` 必须指向真实详情文件。
+- v2/v3 轻量索引不能混入下载地址、checksum、release notes 等重字段。
+- 插件 v2 必须是 v3 中对 `0.17.11 + API v1` 兼容的版本子集。
+- 包内 manifest 的 ID、版本、API 与最低宿主版本必须和详情一致。
 - 详情文件中的插件包和依赖包大小、`sha256` 必须匹配实际文件。
 - 默认禁止生成旧 `plugins/index.json` / `packages/index.json`。
 - 构建后不能留下未提交的生成物差异。
@@ -105,7 +113,7 @@ pwsh ./scripts/validate-registry.ps1
 ## GitHub Actions
 
 - `Validate Registry`：在 `main` push、PR 和手动触发时运行，重建并校验索引；如果生成物没有提交，会直接失败。
-- `Publish Registry`：手动触发发布，重建并校验 Registry，必要时自动提交生成物，然后创建 `registry-yyyyMMdd-HHmmss` tag 和 GitHub Release。Release 会额外上传单个插件包、单个依赖包、v2 轻量索引和详情文件；GitHub 自动生成的 Source code 压缩包仅用于源码快照，不用于市场下载。
+- `Publish Registry`：手动触发发布，重建并校验 Registry，必要时自动提交生成物，然后创建 `registry-yyyyMMdd-HHmmss` tag 和 GitHub Release。Release 会额外上传单个插件包、单个依赖包、插件 v2/v3、依赖包 v2 和详情文件；GitHub 自动生成的 Source code 压缩包仅用于源码快照，不用于市场下载。
 
 ## 发布规则
 
