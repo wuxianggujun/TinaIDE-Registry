@@ -1,7 +1,7 @@
 {
   "id": "tinaide.plugin.starters",
   "name": "TinaIDE Plugin Starters",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "config",
   "description": "Starter templates for TinaIDE plugin development.",
   "author": {

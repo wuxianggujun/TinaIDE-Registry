@@ -36,11 +36,7 @@ build_template() {
   cp "$SHARED_ROOT/validate-core.ps1" "$staging_dir/.tina-starter/validate-core.ps1"
   cp "$SHARED_ROOT/validate_core.py" "$staging_dir/.tina-starter/validate_core.py"
   cp "$SHARED_ROOT/validation-rules.json" "$staging_dir/.tina-starter/validation-rules.json"
-  (
-    cd "$staging_dir"
-    find . -exec touch -t 202001010000 {} +
-    find . -type f -print | LC_ALL=C sort | zip -qX0 "$output_zip" -@
-  )
+  python3 "$SHARED_ROOT/build_deterministic_zip.py" --source "$staging_dir" --output "$output_zip"
   echo "Built $output_zip"
 }
 
