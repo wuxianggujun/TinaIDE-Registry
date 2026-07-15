@@ -334,12 +334,13 @@ function Read-ArchiveEntryBytes {
     param([Parameter(Mandatory = $true)][System.IO.FileInfo]$File)
 
     $textExtensions = @(
-        ".json", ".md", ".txt", ".ps1", ".sh", ".lua", ".xml", ".properties",
+        ".json", ".md", ".txt", ".ps1", ".py", ".sh", ".lua", ".svg", ".xml", ".properties",
         ".gradle", ".kts", ".kt", ".java", ".c", ".cpp", ".h", ".hpp", ".cmake",
         ".pc"
     )
+    $textFileNames = @(".gitignore")
 
-    if ($File.Extension.ToLowerInvariant() -in $textExtensions) {
+    if ($File.Extension.ToLowerInvariant() -in $textExtensions -or $File.Name -in $textFileNames) {
         $text = [System.IO.File]::ReadAllText($File.FullName, [System.Text.Encoding]::UTF8)
         $normalized = $text -replace "`r`n", "`n" -replace "`r", "`n"
         return [System.Text.Encoding]::UTF8.GetBytes($normalized)

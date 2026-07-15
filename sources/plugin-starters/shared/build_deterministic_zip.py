@@ -8,9 +8,10 @@ from pathlib import Path
 
 
 TEXT_EXTENSIONS = {
-    ".json", ".md", ".txt", ".ps1", ".sh", ".lua", ".xml", ".properties",
+    ".json", ".md", ".txt", ".ps1", ".py", ".sh", ".lua", ".svg", ".xml", ".properties",
     ".gradle", ".kts", ".kt", ".java", ".c", ".cpp", ".h", ".hpp", ".cmake", ".pc",
 }
+TEXT_FILE_NAMES = {".gitignore"}
 UTF8_FLAG = 0x0800
 DOS_TIME = 0
 DOS_DATE = 0x5021
@@ -20,7 +21,7 @@ MAX_UINT32 = 0xFFFFFFFF
 
 def read_entry_bytes(path: Path) -> bytes:
     data = path.read_bytes()
-    if path.suffix.lower() not in TEXT_EXTENSIONS:
+    if path.suffix.lower() not in TEXT_EXTENSIONS and path.name not in TEXT_FILE_NAMES:
         return data
     text = data.decode("utf-8-sig").replace("\r\n", "\n").replace("\r", "\n")
     return text.encode("utf-8")

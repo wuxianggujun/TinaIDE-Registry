@@ -18,6 +18,16 @@
   },
   "versions": [
     {
+      "version": "1.0.4",
+      "version_code": 10004,
+      "file_size": 248436,
+      "file_hash": "sha256:0e8821b42f975462557a6e9c77e885474ea58bad54b2c2b72560553ea4d9a8c8",
+      "download_url": "plugins/tinaide.plugin.starters/1.0.4/tinaide.plugin.starters.tinaplug",
+      "api_version": 1,
+      "changelog": "Normalize all Starter text assets so Windows and Linux builds remain byte-for-byte reproducible.",
+      "created_at": "2026-07-15T00:00:00Z"
+    },
+    {
       "version": "1.0.3",
       "version_code": 10003,
       "file_size": 250150,

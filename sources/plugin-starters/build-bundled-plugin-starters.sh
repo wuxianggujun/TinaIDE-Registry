@@ -17,7 +17,7 @@ build_template() {
   source_dir="$SCRIPT_DIR/$template_name"
   staging_dir="$STAGING_ROOT/$template_name"
 
-  "$source_dir/validate.sh"
+  sh "$source_dir/validate.sh"
 
   rm -f "$output_zip"
   rm -rf "$staging_dir"
