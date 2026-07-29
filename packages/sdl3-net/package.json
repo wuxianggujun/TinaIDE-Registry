@@ -1,0 +1,53 @@
+{
+  "package": {
+    "id": "sdl3-net",
+    "name": "SDL3_net",
+    "description": "Portable networking library for SDL3",
+    "category": "library",
+    "homepage": "https://github.com/libsdl-org/SDL_net",
+    "android": {
+      "version": "3.2.0",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 41664,
+      "download_url": "packages/sdl3-net/3.2.0/sdl3-net.tar.xz",
+      "checksum": "sha256:0a4fe9e6eb8645bfb050144b64464ef828633aae2ecbacbd150ed04ae814bf8d",
+      "is_latest": true,
+      "release_notes": "Adds SDL3_net for portable networking.",
+      "abi": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "sdl3"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 18,
+        "package_id": "sdl3-net",
+        "platform": "android",
+        "version": "3.2.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 41664,
+        "download_url": "packages/sdl3-net/3.2.0/sdl3-net.tar.xz",
+        "checksum": "sha256:0a4fe9e6eb8645bfb050144b64464ef828633aae2ecbacbd150ed04ae814bf8d",
+        "is_latest": true,
+        "release_notes": "Adds SDL3_net for portable networking.",
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ],
+        "dependencies": [
+          "sdl3"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

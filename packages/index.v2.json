@@ -20,10 +20,11 @@
         "version": "3.5.0",
         "artifact_type": "shared",
         "install_type": "download",
-        "size": 1238164,
+        "size": 1854768,
         "is_latest": true,
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ]
       }
     },
@@ -128,10 +129,11 @@
         "version": "3.4.4",
         "artifact_type": "shared",
         "install_type": "download",
-        "size": 325440,
+        "size": 214836,
         "is_latest": true,
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ]
       }
     },
@@ -146,10 +148,11 @@
         "version": "3.2.2",
         "artifact_type": "shared",
         "install_type": "download",
-        "size": 1151524,
+        "size": 666484,
         "is_latest": true,
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ]
       }
     },
@@ -164,10 +167,11 @@
         "version": "3.1.1",
         "artifact_type": "static",
         "install_type": "download",
-        "size": 585852,
+        "size": 1070324,
         "is_latest": true,
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ]
       }
     },
@@ -198,6 +202,139 @@
         "artifact_type": "shared",
         "install_type": "download",
         "size": 1166288,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl2-image",
+      "name": "SDL2_image",
+      "description": "Image loading library for SDL2 with lightweight built-in backends",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_image",
+      "detail_url": "packages/sdl2-image/package.json",
+      "android": {
+        "version": "2.8.12",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 184980,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl2-ttf",
+      "name": "SDL2_ttf",
+      "description": "TrueType font rendering library for SDL2 using vendored FreeType",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_ttf",
+      "detail_url": "packages/sdl2-ttf/package.json",
+      "android": {
+        "version": "2.24.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 621812,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl2-mixer",
+      "name": "SDL2_mixer",
+      "description": "Audio mixer for SDL2 with built-in WAV, Ogg, MP3, and FLAC decoders",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_mixer",
+      "detail_url": "packages/sdl2-mixer/package.json",
+      "android": {
+        "version": "2.8.2",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 239116,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl2-net",
+      "name": "SDL2_net",
+      "description": "Portable TCP and UDP networking library for SDL2",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_net",
+      "detail_url": "packages/sdl2-net/package.json",
+      "android": {
+        "version": "2.4.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 21696,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl3-mixer",
+      "name": "SDL3_mixer",
+      "description": "Audio mixer for SDL3 with built-in WAV, Ogg, MP3, and FLAC decoders",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_mixer",
+      "detail_url": "packages/sdl3-mixer/package.json",
+      "android": {
+        "version": "3.2.4",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 241988,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "sdl3-net",
+      "name": "SDL3_net",
+      "description": "Portable networking library for SDL3",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_net",
+      "detail_url": "packages/sdl3-net/package.json",
+      "android": {
+        "version": "3.2.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 41664,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "raylib",
+      "name": "raylib",
+      "description": "Simple and easy-to-use game programming library",
+      "category": "library",
+      "homepage": "https://www.raylib.com/",
+      "detail_url": "packages/raylib/package.json",
+      "android": {
+        "version": "6.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "size": 1101432,
         "is_latest": true,
         "abi": [
           "arm64-v8a",

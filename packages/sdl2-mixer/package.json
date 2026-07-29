@@ -1,0 +1,53 @@
+{
+  "package": {
+    "id": "sdl2-mixer",
+    "name": "SDL2_mixer",
+    "description": "Audio mixer for SDL2 with built-in WAV, Ogg, MP3, and FLAC decoders",
+    "category": "library",
+    "homepage": "https://github.com/libsdl-org/SDL_mixer",
+    "android": {
+      "version": "2.8.2",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 239116,
+      "download_url": "packages/sdl2-mixer/2.8.2/sdl2-mixer.tar.xz",
+      "checksum": "sha256:bc3fa2e6a50c99e1dc17ba25797478a88d98446d67dbd55e97bd4ca3857e15e6",
+      "is_latest": true,
+      "release_notes": "Adds SDL2_mixer with built-in WAV, Ogg, MP3, and FLAC decoders and no extra dynamic codec dependencies.",
+      "abi": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "sdl2"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 15,
+        "package_id": "sdl2-mixer",
+        "platform": "android",
+        "version": "2.8.2",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 239116,
+        "download_url": "packages/sdl2-mixer/2.8.2/sdl2-mixer.tar.xz",
+        "checksum": "sha256:bc3fa2e6a50c99e1dc17ba25797478a88d98446d67dbd55e97bd4ca3857e15e6",
+        "is_latest": true,
+        "release_notes": "Adds SDL2_mixer with built-in WAV, Ogg, MP3, and FLAC decoders and no extra dynamic codec dependencies.",
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ],
+        "dependencies": [
+          "sdl2"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "package": {
+    "id": "sdl2-net",
+    "name": "SDL2_net",
+    "description": "Portable TCP and UDP networking library for SDL2",
+    "category": "library",
+    "homepage": "https://github.com/libsdl-org/SDL_net",
+    "android": {
+      "version": "2.4.0",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 21696,
+      "download_url": "packages/sdl2-net/2.4.0/sdl2-net.tar.xz",
+      "checksum": "sha256:7061f3915bbfd45d693623b1aa22d478df205fd58630ab3ef31e36aafd819546",
+      "is_latest": true,
+      "release_notes": "Adds SDL2_net for portable TCP and UDP networking.",
+      "abi": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "sdl2"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 16,
+        "package_id": "sdl2-net",
+        "platform": "android",
+        "version": "2.4.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 21696,
+        "download_url": "packages/sdl2-net/2.4.0/sdl2-net.tar.xz",
+        "checksum": "sha256:7061f3915bbfd45d693623b1aa22d478df205fd58630ab3ef31e36aafd819546",
+        "is_latest": true,
+        "release_notes": "Adds SDL2_net for portable TCP and UDP networking.",
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ],
+        "dependencies": [
+          "sdl2"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

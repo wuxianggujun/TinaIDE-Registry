@@ -1,0 +1,47 @@
+{
+  "package": {
+    "id": "raylib",
+    "name": "raylib",
+    "description": "Simple and easy-to-use game programming library",
+    "category": "library",
+    "homepage": "https://www.raylib.com/",
+    "android": {
+      "version": "6.0",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 1101432,
+      "download_url": "packages/raylib/6.0/raylib.tar.xz",
+      "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+      "is_latest": true,
+      "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata.",
+      "abi": [
+        "arm64-v8a",
+        "x86_64"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 19,
+        "package_id": "raylib",
+        "platform": "android",
+        "version": "6.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 1101432,
+        "download_url": "packages/raylib/6.0/raylib.tar.xz",
+        "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+        "is_latest": true,
+        "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata.",
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}

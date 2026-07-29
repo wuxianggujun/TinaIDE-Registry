@@ -9,13 +9,14 @@
       "version": "3.4.4",
       "artifact_type": "shared",
       "install_type": "download",
-      "size": 325440,
+      "size": 214836,
       "download_url": "packages/sdl3-image/3.4.4/sdl3-image.tar.xz",
-      "checksum": "sha256:76d25ad427f89d6b2ac44bd2880c2960fe07976fb7992eab8be183597de1db85",
+      "checksum": "sha256:5aaec3754c7287da390ac6fa82b261f7aa3b1148160c4e7a8995b4f126646acf",
       "is_latest": true,
-      "release_notes": "Adds SDL3_image for SDL3 projects. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies.",
+      "release_notes": "Package revision 2 adds x86_64. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies.",
       "abi": [
-        "arm64-v8a"
+        "arm64-v8a",
+        "x86_64"
       ],
       "dependencies": [
         "sdl3"
@@ -31,13 +32,14 @@
         "version": "3.4.4",
         "artifact_type": "shared",
         "install_type": "download",
-        "download_size": 325440,
+        "download_size": 214836,
         "download_url": "packages/sdl3-image/3.4.4/sdl3-image.tar.xz",
-        "checksum": "sha256:76d25ad427f89d6b2ac44bd2880c2960fe07976fb7992eab8be183597de1db85",
+        "checksum": "sha256:5aaec3754c7287da390ac6fa82b261f7aa3b1148160c4e7a8995b4f126646acf",
         "is_latest": true,
-        "release_notes": "Adds SDL3_image for SDL3 projects. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies.",
+        "release_notes": "Package revision 2 adds x86_64. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies.",
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ],
         "dependencies": [
           "sdl3"

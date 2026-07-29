@@ -19,9 +19,9 @@
         "version": "3.5.0",
         "artifact_type": "shared",
         "install_type": "download",
-        "abi": ["arm64-v8a"],
+        "abi": ["arm64-v8a", "x86_64"],
         "is_latest": true,
-        "release_notes": "Initial Registry-hosted SDL3 Android package."
+        "release_notes": "Package revision 2 adds x86_64 alongside arm64-v8a and records the exact upstream commit."
       }
     },
     {
@@ -125,10 +125,10 @@
         "version": "3.4.4",
         "artifact_type": "shared",
         "install_type": "download",
-        "abi": ["arm64-v8a"],
+        "abi": ["arm64-v8a", "x86_64"],
         "dependencies": ["sdl3"],
         "is_latest": true,
-        "release_notes": "Adds SDL3_image for SDL3 projects. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies."
+        "release_notes": "Package revision 2 adds x86_64. This build uses stb and built-in loaders, and disables AVIF, JXL, TIFF, WEBP, and libpng dynamic dependencies."
       }
     },
     {
@@ -142,10 +142,10 @@
         "version": "3.2.2",
         "artifact_type": "shared",
         "install_type": "download",
-        "abi": ["arm64-v8a"],
+        "abi": ["arm64-v8a", "x86_64"],
         "dependencies": ["sdl3"],
         "is_latest": true,
-        "release_notes": "Adds SDL3_ttf for SDL3 projects. This build uses vendored FreeType and disables HarfBuzz and PlutoSVG to keep the first Android package small."
+        "release_notes": "Package revision 2 adds x86_64. This build uses vendored FreeType and disables HarfBuzz and PlutoSVG."
       }
     },
     {
@@ -159,9 +159,9 @@
         "version": "3.1.1",
         "artifact_type": "static",
         "install_type": "download",
-        "abi": ["arm64-v8a"],
+        "abi": ["arm64-v8a", "x86_64"],
         "is_latest": true,
-        "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects."
+        "release_notes": "Package revision 2 provides the Box2D 3.x static library and CMake package for arm64-v8a and x86_64."
       }
     },
     {
@@ -193,6 +193,124 @@
         "abi": ["arm64-v8a", "x86_64"],
         "is_latest": true,
         "release_notes": "Adds SDL2 for arm64-v8a and x86_64. The native runtime targets TinaIDE's relocated org.libsdl2.app Android JNI bridge so SDL2 and SDL3 can coexist."
+      }
+    },
+    {
+      "id": "sdl2-image",
+      "name": "SDL2_image",
+      "description": "Image loading library for SDL2 with lightweight built-in backends",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_image",
+      "file": "packages/sdl2-image/2.8.12/sdl2-image.tar.xz",
+      "android": {
+        "version": "2.8.12",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl2"],
+        "is_latest": true,
+        "release_notes": "Adds SDL2_image with built-in image loaders and no extra dynamic image codec dependencies."
+      }
+    },
+    {
+      "id": "sdl2-ttf",
+      "name": "SDL2_ttf",
+      "description": "TrueType font rendering library for SDL2 using vendored FreeType",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_ttf",
+      "file": "packages/sdl2-ttf/2.24.0/sdl2-ttf.tar.xz",
+      "android": {
+        "version": "2.24.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl2"],
+        "is_latest": true,
+        "release_notes": "Adds SDL2_ttf with vendored FreeType and no external font library dependency."
+      }
+    },
+    {
+      "id": "sdl2-mixer",
+      "name": "SDL2_mixer",
+      "description": "Audio mixer for SDL2 with built-in WAV, Ogg, MP3, and FLAC decoders",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_mixer",
+      "file": "packages/sdl2-mixer/2.8.2/sdl2-mixer.tar.xz",
+      "android": {
+        "version": "2.8.2",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl2"],
+        "is_latest": true,
+        "release_notes": "Adds SDL2_mixer with built-in WAV, Ogg, MP3, and FLAC decoders and no extra dynamic codec dependencies."
+      }
+    },
+    {
+      "id": "sdl2-net",
+      "name": "SDL2_net",
+      "description": "Portable TCP and UDP networking library for SDL2",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_net",
+      "file": "packages/sdl2-net/2.4.0/sdl2-net.tar.xz",
+      "android": {
+        "version": "2.4.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl2"],
+        "is_latest": true,
+        "release_notes": "Adds SDL2_net for portable TCP and UDP networking."
+      }
+    },
+    {
+      "id": "sdl3-mixer",
+      "name": "SDL3_mixer",
+      "description": "Audio mixer for SDL3 with built-in WAV, Ogg, MP3, and FLAC decoders",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_mixer",
+      "file": "packages/sdl3-mixer/3.2.4/sdl3-mixer.tar.xz",
+      "android": {
+        "version": "3.2.4",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl3"],
+        "is_latest": true,
+        "release_notes": "Adds SDL3_mixer with built-in WAV, Ogg, MP3, and FLAC decoders and no extra dynamic codec dependencies."
+      }
+    },
+    {
+      "id": "sdl3-net",
+      "name": "SDL3_net",
+      "description": "Portable networking library for SDL3",
+      "category": "library",
+      "homepage": "https://github.com/libsdl-org/SDL_net",
+      "file": "packages/sdl3-net/3.2.0/sdl3-net.tar.xz",
+      "android": {
+        "version": "3.2.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "dependencies": ["sdl3"],
+        "is_latest": true,
+        "release_notes": "Adds SDL3_net for portable networking."
+      }
+    },
+    {
+      "id": "raylib",
+      "name": "raylib",
+      "description": "Simple and easy-to-use game programming library",
+      "category": "library",
+      "homepage": "https://www.raylib.com/",
+      "file": "packages/raylib/6.0/raylib.tar.xz",
+      "android": {
+        "version": "6.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "is_latest": true,
+        "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata."
       }
     }
   ]

@@ -9,13 +9,14 @@
       "version": "3.1.1",
       "artifact_type": "static",
       "install_type": "download",
-      "size": 585852,
+      "size": 1070324,
       "download_url": "packages/box2d/3.1.1/box2d.tar.xz",
-      "checksum": "sha256:f060c21c5bca48b544f789c789ace126437c036b8048190b0c771e488e6c71e3",
+      "checksum": "sha256:3a9381fea53bfcd3a4edd08936438cda12e7394755cb881235ba3babdf8fdb06",
       "is_latest": true,
-      "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects.",
+      "release_notes": "Package revision 2 provides the Box2D 3.x static library and CMake package for arm64-v8a and x86_64.",
       "abi": [
-        "arm64-v8a"
+        "arm64-v8a",
+        "x86_64"
       ]
     }
   },
@@ -28,13 +29,14 @@
         "version": "3.1.1",
         "artifact_type": "static",
         "install_type": "download",
-        "download_size": 585852,
+        "download_size": 1070324,
         "download_url": "packages/box2d/3.1.1/box2d.tar.xz",
-        "checksum": "sha256:f060c21c5bca48b544f789c789ace126437c036b8048190b0c771e488e6c71e3",
+        "checksum": "sha256:3a9381fea53bfcd3a4edd08936438cda12e7394755cb881235ba3babdf8fdb06",
         "is_latest": true,
-        "release_notes": "Adds the Box2D 3.x static library and CMake package for Android arm64 projects.",
+        "release_notes": "Package revision 2 provides the Box2D 3.x static library and CMake package for arm64-v8a and x86_64.",
         "abi": [
-          "arm64-v8a"
+          "arm64-v8a",
+          "x86_64"
         ]
       }
     ]

@@ -1,0 +1,53 @@
+{
+  "package": {
+    "id": "sdl2-ttf",
+    "name": "SDL2_ttf",
+    "description": "TrueType font rendering library for SDL2 using vendored FreeType",
+    "category": "library",
+    "homepage": "https://github.com/libsdl-org/SDL_ttf",
+    "android": {
+      "version": "2.24.0",
+      "artifact_type": "shared",
+      "install_type": "download",
+      "size": 621812,
+      "download_url": "packages/sdl2-ttf/2.24.0/sdl2-ttf.tar.xz",
+      "checksum": "sha256:7efd941cbc06ce69993f3115fa660857f4511cea4ac47d57dfaaf6d8a78a9d73",
+      "is_latest": true,
+      "release_notes": "Adds SDL2_ttf with vendored FreeType and no external font library dependency.",
+      "abi": [
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "dependencies": [
+        "sdl2"
+      ]
+    }
+  },
+  "versions": {
+    "android": [
+      {
+        "id": 14,
+        "package_id": "sdl2-ttf",
+        "platform": "android",
+        "version": "2.24.0",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "download_size": 621812,
+        "download_url": "packages/sdl2-ttf/2.24.0/sdl2-ttf.tar.xz",
+        "checksum": "sha256:7efd941cbc06ce69993f3115fa660857f4511cea4ac47d57dfaaf6d8a78a9d73",
+        "is_latest": true,
+        "release_notes": "Adds SDL2_ttf with vendored FreeType and no external font library dependency.",
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ],
+        "dependencies": [
+          "sdl2"
+        ]
+      }
+    ]
+  },
+  "downloads": {
+
+  }
+}
