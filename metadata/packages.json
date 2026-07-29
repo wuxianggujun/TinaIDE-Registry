@@ -178,6 +178,22 @@
         "is_latest": true,
         "release_notes": "Adds the miniaudio single-header library for lightweight game audio experiments."
       }
+    },
+    {
+      "id": "sdl2",
+      "name": "SDL2",
+      "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE's relocated JNI bridge",
+      "category": "library",
+      "homepage": "https://www.libsdl.org/",
+      "file": "packages/sdl2/2.32.10/sdl2.tar.xz",
+      "android": {
+        "version": "2.32.10",
+        "artifact_type": "shared",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "is_latest": true,
+        "release_notes": "Adds SDL2 for arm64-v8a and x86_64. The native runtime targets TinaIDE's relocated org.libsdl2.app Android JNI bridge so SDL2 and SDL3 can coexist."
+      }
     }
   ]
 }
