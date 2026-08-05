@@ -88,6 +88,7 @@ pwsh ./scripts/build-registry.ps1
 - 将 `sources/plugins/**` 打包成 `.tinaplug`。
 - 计算插件包和依赖包的 `sha256` 与文件大小。
 - 重写插件 v2/v3、依赖包 v2 和对应详情文件。
+- 为 native 依赖包生成按 ABI 标注的下载源，每个源保存独立的大小和 SHA-256。
 - 拒绝用不同内容覆盖已存在的同版本 `.tinaplug`。
 - 默认移除旧 `plugins/index.json` / `packages/index.json`；如需旧客户端兼容，
   显式加 `-IncludeLegacyV1`。
@@ -107,6 +108,7 @@ pwsh ./scripts/validate-registry.ps1
 - 插件 v2 必须是 v3 中对 `0.17.11 + API v1` 兼容的版本子集。
 - 包内 manifest 的 ID、版本、API 与最低宿主版本必须和详情一致。
 - 详情文件中的插件包和依赖包大小、`sha256` 必须匹配实际文件。
+- native 依赖包声明的 ABI 必须与独立下载源一一对应，且每个归档只包含自己的 `lib/<abi>/`。
 - 默认禁止生成旧 `plugins/index.json` / `packages/index.json`。
 - 构建后不能留下未提交的生成物差异。
 
@@ -119,6 +121,8 @@ pwsh ./scripts/validate-registry.ps1
 
 - 插件发布内容放在 `sources/plugins/<plugin-id>/`，根目录必须包含 `manifest.json`。
 - 依赖包发布文件放在 `packages/<package-id>/<version>/`。
+- native 依赖包保留 `<package-id>.tar.xz` 作为旧客户端通用包，同时发布
+  `<package-id>-arm64-v8a.tar.xz` 与 `<package-id>-x86_64.tar.xz`；当前客户端只下载匹配 ABI 的归档。
 - 大文件可以不放入本仓库，但必须在索引中填写可信 CDN、对象存储或自建代理的绝对 URL。
 - 不要把 Android 客户端源码、后端、数据库或管理后台放入本仓库。
 

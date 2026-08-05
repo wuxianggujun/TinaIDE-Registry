@@ -42,6 +42,44 @@
     ]
   },
   "downloads": {
-
+    "box2d:10": {
+      "package_id": "box2d",
+      "version": "3.1.1",
+      "platform": "android",
+      "install_type": "download",
+      "size": 1070324,
+      "checksum": "sha256:3a9381fea53bfcd3a4edd08936438cda12e7394755cb881235ba3babdf8fdb06",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/box2d/3.1.1/box2d.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 1070324,
+          "checksum": "sha256:3a9381fea53bfcd3a4edd08936438cda12e7394755cb881235ba3babdf8fdb06"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/box2d/3.1.1/box2d-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 593480,
+          "checksum": "sha256:b4172b448818d7f75693679e10e63959af0a1b99ab145d9471bf6fa3fdc0db95"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/box2d/3.1.1/box2d-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 583464,
+          "checksum": "sha256:2afc4889f4a6d49991026d0db0cc088bab14b9667beafa00873f10fbfd7016ac"
+        }
+      ]
+    }
   }
 }

@@ -42,6 +42,44 @@
     ]
   },
   "downloads": {
-
+    "raylib:19": {
+      "package_id": "raylib",
+      "version": "6.0",
+      "platform": "android",
+      "install_type": "download",
+      "size": 1101432,
+      "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/raylib/6.0/raylib.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 1101432,
+          "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/raylib/6.0/raylib-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 571852,
+          "checksum": "sha256:60e68c1772950e03b5049dcd958e6abaaa4edd0f34792b12459da509544c311a"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/raylib/6.0/raylib-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 646520,
+          "checksum": "sha256:d08bf0b7903fe9a1340c892892181bbca7a17791873ce4ad34c7eb6cde415610"
+        }
+      ]
+    }
   }
 }

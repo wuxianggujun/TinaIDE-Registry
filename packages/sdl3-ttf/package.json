@@ -48,6 +48,44 @@
     ]
   },
   "downloads": {
-
+    "sdl3-ttf:9": {
+      "package_id": "sdl3-ttf",
+      "version": "3.2.2",
+      "platform": "android",
+      "install_type": "download",
+      "size": 666484,
+      "checksum": "sha256:6aefb7b10a0d8008880cb741e4d5430f933b523a0df1bb1d8578930393e3ef9c",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl3-ttf/3.2.2/sdl3-ttf.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 666484,
+          "checksum": "sha256:6aefb7b10a0d8008880cb741e4d5430f933b523a0df1bb1d8578930393e3ef9c"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl3-ttf/3.2.2/sdl3-ttf-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 343928,
+          "checksum": "sha256:ca1dd6f0d08b4232ebb9a7694534aec6e2bd5da97385539cf27ac56f48fe13d1"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl3-ttf/3.2.2/sdl3-ttf-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 381148,
+          "checksum": "sha256:460bb816b2749f84435f822a2ea1662299c1daef50981d73bc50c09facc61c32"
+        }
+      ]
+    }
   }
 }

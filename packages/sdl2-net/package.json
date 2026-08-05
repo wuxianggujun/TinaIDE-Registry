@@ -48,6 +48,44 @@
     ]
   },
   "downloads": {
-
+    "sdl2-net:16": {
+      "package_id": "sdl2-net",
+      "version": "2.4.0",
+      "platform": "android",
+      "install_type": "download",
+      "size": 21696,
+      "checksum": "sha256:7061f3915bbfd45d693623b1aa22d478df205fd58630ab3ef31e36aafd819546",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl2-net/2.4.0/sdl2-net.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 21696,
+          "checksum": "sha256:7061f3915bbfd45d693623b1aa22d478df205fd58630ab3ef31e36aafd819546"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl2-net/2.4.0/sdl2-net-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 16644,
+          "checksum": "sha256:8fd8c79d3a41a4f9dc52ce70f6ee6396a8dad898a943cb9d07a26183957b5237"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl2-net/2.4.0/sdl2-net-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 16732,
+          "checksum": "sha256:e25f8423b65fb5b932934df0951e14124af59887bd3f3fff2357ff822b26dc3c"
+        }
+      ]
+    }
   }
 }

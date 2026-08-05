@@ -607,6 +607,38 @@ foreach ($pkg in @($packageMetadata.packages)) {
     $artifactType = Get-PackageArtifactType -AndroidPackage $pkg.android -PackageId ([string]$pkg.id)
     $androidAbi = Get-StringArrayOrNull $pkg.android.abi
     $androidDependencies = Get-StringArrayOrNull $pkg.android.dependencies
+    $abiArtifactSources = @()
+    if ($null -ne $pkg.PSObject.Properties["artifacts"]) {
+        $artifactSourceId = 2
+        foreach ($artifact in @($pkg.artifacts)) {
+            $artifactAbi = [string]$artifact.abi
+            if ([string]::IsNullOrWhiteSpace($artifactAbi)) {
+                throw "Package ABI artifact is missing abi: $($pkg.id)"
+            }
+            $artifactPath = Join-Path $registryRoot ([string]$artifact.file)
+            if (-not (Test-Path -LiteralPath $artifactPath -PathType Leaf)) {
+                throw "Package ABI artifact not found: $artifactPath"
+            }
+            $artifactFile = Get-Item -LiteralPath $artifactPath
+            $abiArtifactSources += [ordered]@{
+                id = $artifactSourceId
+                name = "Registry $artifactAbi"
+                url = [string]$artifact.file
+                priority = 90
+                supports_range = $true
+                abi = $artifactAbi
+                size = $artifactFile.Length
+                checksum = "sha256:{0}" -f (Get-FileSha256 $artifactFile.FullName)
+            }
+            $artifactSourceId++
+        }
+
+        $declaredAbis = @($androidAbi | Sort-Object -Unique)
+        $artifactAbis = @($abiArtifactSources | ForEach-Object { [string]$_.abi } | Sort-Object -Unique)
+        if (($declaredAbis -join ",") -ne ($artifactAbis -join ",")) {
+            throw "Package ABI artifacts do not match android.abi: $($pkg.id)"
+        }
+    }
 
     $androidEntry = [ordered]@{
         version = [string]$pkg.android.version
@@ -670,10 +702,34 @@ foreach ($pkg in @($packageMetadata.packages)) {
         android = $androidCatalogEntry
     }
 
+    $downloads = [ordered]@{}
+    if ($abiArtifactSources.Count -gt 0) {
+        $downloadSources = @(
+            [ordered]@{
+                id = 1
+                name = "Registry universal (legacy)"
+                url = [string]$pkg.file
+                priority = 100
+                supports_range = $true
+                size = $file.Length
+                checksum = $checksum
+            }
+        ) + $abiArtifactSources
+        $downloads["{0}:{1}" -f ([string]$pkg.id), $packageVersionId] = [ordered]@{
+            package_id = [string]$pkg.id
+            version = [string]$pkg.android.version
+            platform = "android"
+            install_type = [string]$pkg.android.install_type
+            size = $file.Length
+            checksum = $checksum
+            sources = $downloadSources
+        }
+    }
+
     $packageDetail = [ordered]@{
         package = $packageEntry
         versions = $versionMap[[string]$pkg.id]
-        downloads = [ordered]@{}
+        downloads = $downloads
     }
     Write-Utf8NoBom `
         -Path (Join-Path $registryRoot ("packages/{0}/package.json" -f ([string]$pkg.id))) `

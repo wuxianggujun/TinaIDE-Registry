@@ -48,6 +48,44 @@
     ]
   },
   "downloads": {
-
+    "sdl3-image:8": {
+      "package_id": "sdl3-image",
+      "version": "3.4.4",
+      "platform": "android",
+      "install_type": "download",
+      "size": 214836,
+      "checksum": "sha256:5aaec3754c7287da390ac6fa82b261f7aa3b1148160c4e7a8995b4f126646acf",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl3-image/3.4.4/sdl3-image.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 214836,
+          "checksum": "sha256:5aaec3754c7287da390ac6fa82b261f7aa3b1148160c4e7a8995b4f126646acf"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl3-image/3.4.4/sdl3-image-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 111616,
+          "checksum": "sha256:41b994950f5798cc2138d97f178da8ba7a9334a8748eec65007b264c5bba7598"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl3-image/3.4.4/sdl3-image-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 122252,
+          "checksum": "sha256:e78080b20b33d3527ebaaed0ca00b168fa119820a572d9b95f1ae9990de222a3"
+        }
+      ]
+    }
   }
 }

@@ -48,6 +48,44 @@
     ]
   },
   "downloads": {
-
+    "sdl2-ttf:14": {
+      "package_id": "sdl2-ttf",
+      "version": "2.24.0",
+      "platform": "android",
+      "install_type": "download",
+      "size": 621812,
+      "checksum": "sha256:7efd941cbc06ce69993f3115fa660857f4511cea4ac47d57dfaaf6d8a78a9d73",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl2-ttf/2.24.0/sdl2-ttf.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 621812,
+          "checksum": "sha256:7efd941cbc06ce69993f3115fa660857f4511cea4ac47d57dfaaf6d8a78a9d73"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl2-ttf/2.24.0/sdl2-ttf-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 318864,
+          "checksum": "sha256:199c1e9c9c1c75eea32e34f0a4e1ebda770bf96c6a3e779b9dea361a6928b286"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl2-ttf/2.24.0/sdl2-ttf-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 357572,
+          "checksum": "sha256:3058932a6861aeb9d2ed75c8cc3905bf1915fc699c244cd1c1ea6e8971264511"
+        }
+      ]
+    }
   }
 }

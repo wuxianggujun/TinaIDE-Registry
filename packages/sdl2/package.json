@@ -42,6 +42,44 @@
     ]
   },
   "downloads": {
-
+    "sdl2:12": {
+      "package_id": "sdl2",
+      "version": "2.32.10",
+      "platform": "android",
+      "install_type": "download",
+      "size": 1166288,
+      "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl2/2.32.10/sdl2.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 1166288,
+          "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl2/2.32.10/sdl2-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 720264,
+          "checksum": "sha256:7e91a807c606af3f2965f7fcd8dd39ce692d5fc2b2adaa60e6006c5b91a5b785"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl2/2.32.10/sdl2-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 790832,
+          "checksum": "sha256:b9e1f6c419431a16bfc731fb161b50228e3b34ff7f34b2b4cd15e1406a9c828c"
+        }
+      ]
+    }
   }
 }

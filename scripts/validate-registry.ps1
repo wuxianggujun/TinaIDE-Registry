@@ -290,6 +290,33 @@ function Assert-DownloadFile {
     }
 }
 
+function Assert-PackageArtifactAbi {
+    param(
+        [Parameter(Mandatory = $true)][string]$UrlOrPath,
+        [Parameter(Mandatory = $true)][string]$ExpectedAbi,
+        [Parameter(Mandatory = $true)][object[]]$DeclaredAbis
+    )
+
+    $archivePath = Resolve-RegistryFile -UrlOrPath $UrlOrPath
+    if ($null -eq $archivePath) {
+        return
+    }
+    $entries = @(& tar -tf $archivePath)
+    Assert-RegistryCondition -Condition ($LASTEXITCODE -eq 0) -Message "Failed to list package archive: $archivePath"
+    $normalizedEntries = @($entries | ForEach-Object { ([string]$_) -replace '^\./', '' })
+    Assert-RegistryCondition `
+        -Condition ([bool]($normalizedEntries | Where-Object { $_.StartsWith("lib/$ExpectedAbi/") } | Select-Object -First 1)) `
+        -Message "Package ABI artifact has no lib/$ExpectedAbi content: $archivePath"
+    foreach ($otherAbi in @($DeclaredAbis)) {
+        if ([string]$otherAbi -eq $ExpectedAbi) {
+            continue
+        }
+        Assert-RegistryCondition `
+            -Condition (-not [bool]($normalizedEntries | Where-Object { $_.StartsWith("lib/$otherAbi/") } | Select-Object -First 1)) `
+            -Message "Package $ExpectedAbi artifact contains $otherAbi libraries: $archivePath"
+    }
+}
+
 function Invoke-PluginContractValidation {
     $validatorPath = Join-Path $registryRoot "sources/plugin-starters/shared/validate_core.py"
     Assert-RegistryCondition -Condition (Test-Path -LiteralPath $validatorPath -PathType Leaf) -Message "Missing plugin contract validator"
@@ -507,13 +534,39 @@ foreach ($package in $packageCatalog) {
 
     if ($null -ne $detail.downloads) {
         foreach ($downloadEntry in $detail.downloads.PSObject.Properties) {
+            $sourceAbis = @()
             foreach ($source in @($downloadEntry.Value.sources)) {
                 if (-not [string]::IsNullOrWhiteSpace([string]$source.url)) {
+                    $sourceSize = if (Test-JsonProperty -Object $source -Name "size") {
+                        [long]$source.size
+                    } else {
+                        [long]$downloadEntry.Value.size
+                    }
+                    $sourceChecksum = if (Test-JsonProperty -Object $source -Name "checksum") {
+                        [string]$source.checksum
+                    } else {
+                        [string]$downloadEntry.Value.checksum
+                    }
                     Assert-DownloadFile `
                         -UrlOrPath ([string]$source.url) `
-                        -ExpectedSize ([long]$downloadEntry.Value.size) `
-                        -ExpectedHash ([string]$downloadEntry.Value.checksum)
+                        -ExpectedSize $sourceSize `
+                        -ExpectedHash $sourceChecksum
                 }
+                if (-not [string]::IsNullOrWhiteSpace([string]$source.abi)) {
+                    $sourceAbis += [string]$source.abi
+                    Assert-PackageArtifactAbi `
+                        -UrlOrPath ([string]$source.url) `
+                        -ExpectedAbi ([string]$source.abi) `
+                        -DeclaredAbis @($detail.package.android.abi)
+                }
+            }
+            Assert-UniqueValues -Values $sourceAbis -Name "download source ABI for $($package.id)"
+            $declaredAbis = @($detail.package.android.abi | Sort-Object -Unique)
+            $resolvedSourceAbis = @($sourceAbis | Sort-Object -Unique)
+            if ($resolvedSourceAbis.Count -gt 0) {
+                Assert-RegistryCondition `
+                    -Condition (($declaredAbis -join ",") -eq ($resolvedSourceAbis -join ",")) `
+                    -Message "Download source ABIs do not match package ABI metadata: $($package.id)"
             }
         }
     }

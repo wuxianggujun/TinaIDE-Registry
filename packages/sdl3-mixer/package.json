@@ -48,6 +48,44 @@
     ]
   },
   "downloads": {
-
+    "sdl3-mixer:17": {
+      "package_id": "sdl3-mixer",
+      "version": "3.2.4",
+      "platform": "android",
+      "install_type": "download",
+      "size": 241988,
+      "checksum": "sha256:c9b8fea1112d47c58feb676b3c5f1167fd1c6118ff68e826c1ae14ef16937ba0",
+      "sources": [
+        {
+          "id": 1,
+          "name": "Registry universal (legacy)",
+          "url": "packages/sdl3-mixer/3.2.4/sdl3-mixer.tar.xz",
+          "priority": 100,
+          "supports_range": true,
+          "size": 241988,
+          "checksum": "sha256:c9b8fea1112d47c58feb676b3c5f1167fd1c6118ff68e826c1ae14ef16937ba0"
+        },
+        {
+          "id": 2,
+          "name": "Registry arm64-v8a",
+          "url": "packages/sdl3-mixer/3.2.4/sdl3-mixer-arm64-v8a.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "arm64-v8a",
+          "size": 132664,
+          "checksum": "sha256:2b2491b377d37047346faacd322923818dec68db9c0705caf2824a42d7694da2"
+        },
+        {
+          "id": 3,
+          "name": "Registry x86_64",
+          "url": "packages/sdl3-mixer/3.2.4/sdl3-mixer-x86_64.tar.xz",
+          "priority": 90,
+          "supports_range": true,
+          "abi": "x86_64",
+          "size": 147740,
+          "checksum": "sha256:90c3189e474fe2cfa6e448e96f756705b7191806e8d74b10b257bb1fbc0a6119"
+        }
+      ]
+    }
   }
 }

@@ -15,6 +15,10 @@
       "category": "library",
       "homepage": "https://www.libsdl.org/",
       "file": "packages/sdl3/3.5.0/sdl3.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl3/3.5.0/sdl3-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl3/3.5.0/sdl3-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.5.0",
         "artifact_type": "shared",
@@ -121,6 +125,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_image",
       "file": "packages/sdl3-image/3.4.4/sdl3-image.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl3-image/3.4.4/sdl3-image-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl3-image/3.4.4/sdl3-image-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.4.4",
         "artifact_type": "shared",
@@ -138,6 +146,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_ttf",
       "file": "packages/sdl3-ttf/3.2.2/sdl3-ttf.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl3-ttf/3.2.2/sdl3-ttf-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl3-ttf/3.2.2/sdl3-ttf-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.2.2",
         "artifact_type": "shared",
@@ -155,6 +167,10 @@
       "category": "library",
       "homepage": "https://box2d.org/",
       "file": "packages/box2d/3.1.1/box2d.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/box2d/3.1.1/box2d-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/box2d/3.1.1/box2d-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.1.1",
         "artifact_type": "static",
@@ -186,6 +202,10 @@
       "category": "library",
       "homepage": "https://www.libsdl.org/",
       "file": "packages/sdl2/2.32.10/sdl2.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl2/2.32.10/sdl2-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2/2.32.10/sdl2-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "2.32.10",
         "artifact_type": "shared",
@@ -202,6 +222,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_image",
       "file": "packages/sdl2-image/2.8.12/sdl2-image.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl2-image/2.8.12/sdl2-image-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2-image/2.8.12/sdl2-image-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "2.8.12",
         "artifact_type": "shared",
@@ -219,6 +243,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_ttf",
       "file": "packages/sdl2-ttf/2.24.0/sdl2-ttf.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl2-ttf/2.24.0/sdl2-ttf-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2-ttf/2.24.0/sdl2-ttf-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "2.24.0",
         "artifact_type": "shared",
@@ -236,6 +264,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_mixer",
       "file": "packages/sdl2-mixer/2.8.2/sdl2-mixer.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl2-mixer/2.8.2/sdl2-mixer-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2-mixer/2.8.2/sdl2-mixer-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "2.8.2",
         "artifact_type": "shared",
@@ -253,6 +285,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_net",
       "file": "packages/sdl2-net/2.4.0/sdl2-net.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl2-net/2.4.0/sdl2-net-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2-net/2.4.0/sdl2-net-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "2.4.0",
         "artifact_type": "shared",
@@ -270,6 +306,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_mixer",
       "file": "packages/sdl3-mixer/3.2.4/sdl3-mixer.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl3-mixer/3.2.4/sdl3-mixer-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl3-mixer/3.2.4/sdl3-mixer-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.2.4",
         "artifact_type": "shared",
@@ -287,6 +327,10 @@
       "category": "library",
       "homepage": "https://github.com/libsdl-org/SDL_net",
       "file": "packages/sdl3-net/3.2.0/sdl3-net.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sdl3-net/3.2.0/sdl3-net-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl3-net/3.2.0/sdl3-net-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "3.2.0",
         "artifact_type": "shared",
@@ -304,6 +348,10 @@
       "category": "library",
       "homepage": "https://www.raylib.com/",
       "file": "packages/raylib/6.0/raylib.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/raylib/6.0/raylib-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/raylib/6.0/raylib-x86_64.tar.xz" }
+      ],
       "android": {
         "version": "6.0",
         "artifact_type": "shared",

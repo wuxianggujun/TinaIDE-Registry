@@ -156,6 +156,21 @@ foreach ($package in @($packageCatalog)) {
         $assetName = "{0}-{1}-{2}" -f $detail.package.id, $version.version, $leaf
         Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
     }
+
+    foreach ($downloadEntry in @($detail.downloads.PSObject.Properties)) {
+        foreach ($downloadSource in @($downloadEntry.Value.sources)) {
+            if ([string]::IsNullOrWhiteSpace([string]$downloadSource.url)) {
+                continue
+            }
+            $source = Resolve-RegistryFile -UrlOrPath ([string]$downloadSource.url)
+            if ($null -eq $source) {
+                continue
+            }
+            $leaf = Split-Path -Leaf $source
+            $assetName = "{0}-{1}-{2}" -f $detail.package.id, $downloadEntry.Value.version, $leaf
+            Copy-ReleaseAsset -SourcePath $source -AssetName $assetName
+        }
+    }
 }
 
 $count = (Get-ChildItem -LiteralPath $outputRoot -File).Count
