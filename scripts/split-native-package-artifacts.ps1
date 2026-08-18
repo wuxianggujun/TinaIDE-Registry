@@ -1,6 +1,7 @@
 param(
     [string]$MetadataPath = "metadata/packages.json",
-    [string]$WorkRoot = ".build/split-native-package-artifacts"
+    [string]$WorkRoot = ".build/split-native-package-artifacts",
+    [string[]]$PackageId = @()
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,6 +43,9 @@ New-Item -ItemType Directory -Force -Path $workDirectory | Out-Null
 $metadata = Get-Content -Raw -Encoding UTF8 $metadataFile | ConvertFrom-Json
 foreach ($package in @($metadata.packages)) {
     if ($null -eq $package.PSObject.Properties["artifacts"]) {
+        continue
+    }
+    if ($PackageId.Count -gt 0 -and [string]$package.id -notin $PackageId) {
         continue
     }
 

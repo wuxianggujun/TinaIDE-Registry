@@ -39,7 +39,7 @@ jobs:
 
       - name: Split native package artifacts by ABI
         shell: pwsh
-        run: ./scripts/split-native-package-artifacts.ps1
+        run: ./scripts/split-native-package-artifacts.ps1 -PackageId sqlite3,zstd
 
       - name: Rebuild registry indexes
         shell: pwsh
