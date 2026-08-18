@@ -375,14 +375,12 @@ $packages = @(
         LicenseNote = "GoogleTest is distributed under the BSD 3-Clause license; see LICENSE in the package source."
         SparsePaths = @(
             "/CMakeLists.txt",
-            "/cmake/",
             "/googletest/",
             "/googlemock/",
             "/LICENSE"
         )
         Copies = @(
             [pscustomobject]@{ Kind = "file"; From = "CMakeLists.txt"; To = "CMakeLists.txt" },
-            [pscustomobject]@{ Kind = "dir"; From = "cmake"; To = "cmake" },
             [pscustomobject]@{ Kind = "dir"; From = "googletest"; To = "googletest" },
             [pscustomobject]@{ Kind = "dir"; From = "googlemock"; To = "googlemock" },
             [pscustomobject]@{ Kind = "file"; From = "LICENSE"; To = "LICENSE" }
