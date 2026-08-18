@@ -73,6 +73,7 @@ sources/plugins/**                         # 官方插件源码或完整打包�
 sources/plugin-starters/**                 # 插件脚手架源模板和校验/打包脚本
 metadata/*.json                            # 生成索引用的元数据
 scripts/*.ps1                              # Registry 构建脚本
+scripts/build-native-packages.sh           # Android NDK native 包构建（GitHub Actions）
 .github/workflows/*.yml                    # Registry 校验和发布自动化
 ```
 
@@ -111,6 +112,15 @@ pwsh ./scripts/validate-registry.ps1
 - native 依赖包声明的 ABI 必须与独立下载源一一对应，且每个归档只包含自己的 `lib/<abi>/`。
 - 默认禁止生成旧 `plugins/index.json` / `packages/index.json`。
 - 构建后不能留下未提交的生成物差异。
+
+### Native 包构建
+
+Android native 包不要求本地 Docker 或 NDK。使用 GitHub Actions 的
+`Build Native Packages` 手动 workflow 编译 `sqlite3`、`zstd`，并生成双 ABI
+归档；`GoogleTest` 以 source/dev 包发布，不会被打进 TinaIDE APK。
+
+当前 Registry 还提供 SDL2/SDL3、raylib、Box2D、Dear ImGui、GLM、fmt、
+nlohmann-json、stb、TinyXML-2 和 miniaudio。
 
 ## GitHub Actions
 

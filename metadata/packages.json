@@ -360,6 +360,61 @@
         "is_latest": true,
         "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata."
       }
+    },
+    {
+      "id": "sqlite3",
+      "name": "SQLite3",
+      "description": "Public-domain embedded SQL database engine",
+      "category": "library",
+      "homepage": "https://www.sqlite.org/",
+      "file": "packages/sqlite3/3.50.3/sqlite3.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/sqlite3/3.50.3/sqlite3-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sqlite3/3.50.3/sqlite3-x86_64.tar.xz" }
+      ],
+      "android": {
+        "version": "3.50.3",
+        "artifact_type": "static",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "is_latest": true,
+        "release_notes": "Adds the SQLite3 Android static library with FTS5 and RTree enabled, CMake and pkg-config metadata, and 16KB-page-compatible NDK builds."
+      }
+    },
+    {
+      "id": "zstd",
+      "name": "Zstandard",
+      "description": "Fast lossless compression algorithm and library",
+      "category": "library",
+      "homepage": "https://github.com/facebook/zstd",
+      "file": "packages/zstd/1.5.7/zstd.tar.xz",
+      "artifacts": [
+        { "abi": "arm64-v8a", "file": "packages/zstd/1.5.7/zstd-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/zstd/1.5.7/zstd-x86_64.tar.xz" }
+      ],
+      "android": {
+        "version": "1.5.7",
+        "artifact_type": "static",
+        "install_type": "download",
+        "abi": ["arm64-v8a", "x86_64"],
+        "is_latest": true,
+        "release_notes": "Adds the Zstandard Android static library with CMake and pkg-config metadata for arm64-v8a and x86_64."
+      }
+    },
+    {
+      "id": "googletest",
+      "name": "GoogleTest",
+      "description": "C++ testing and mocking framework source package",
+      "category": "library",
+      "homepage": "https://github.com/google/googletest",
+      "file": "packages/googletest/1.17.0/googletest.tar.xz",
+      "android": {
+        "version": "1.17.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "is_latest": true,
+        "release_notes": "Adds GoogleTest and GoogleMock source files for user-project development and test builds."
+      }
     }
   ]
 }

@@ -1,0 +1,64 @@
+name: Build Native Packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-native-packages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android NDK and CMake
+        shell: bash
+        run: sdkmanager "ndk;27.2.12479018" "cmake;3.22.1"
+
+      - name: Build sqlite3 and zstd
+        shell: bash
+        run: |
+          export ANDROID_NDK_HOME="$ANDROID_SDK_ROOT/ndk/27.2.12479018"
+          chmod +x scripts/build-native-packages.sh
+          scripts/build-native-packages.sh
+
+      - name: Build GoogleTest source package
+        shell: pwsh
+        run: ./scripts/build-cpp-source-packages.ps1 -PackageId googletest -SkipExisting
+
+      - name: Split native package artifacts by ABI
+        shell: pwsh
+        run: ./scripts/split-native-package-artifacts.ps1
+
+      - name: Rebuild registry indexes
+        shell: pwsh
+        run: ./scripts/build-registry.ps1
+
+      - name: Validate registry
+        shell: pwsh
+        run: ./scripts/validate-registry.ps1 -SkipBuild -SkipGitDiffCheck
+
+      - name: Commit generated packages and indexes
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add metadata packages scripts/build-cpp-source-packages.ps1 scripts/build-native-packages.sh scripts/split-native-package-artifacts.ps1
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "feat(packages): add sqlite3 zstd and googletest"
+            git push origin HEAD:main
+          } else {
+            Write-Host "No package changes to commit."
+          }

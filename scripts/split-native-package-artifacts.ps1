@@ -97,7 +97,7 @@ foreach ($package in @($metadata.packages)) {
         }
         Push-Location $stageRoot
         try {
-            & tar -caf $artifactPath *
+            & tar --sort=name --mtime="UTC 1970-01-01" --owner=0 --group=0 --numeric-owner -caf $artifactPath *
             if ($LASTEXITCODE -ne 0) {
                 throw "Failed to create ABI package artifact: $artifactPath"
             }

@@ -1,6 +1,8 @@
 param(
     [string]$OutputRoot = "",
-    [string]$WorkRoot = ""
+    [string]$WorkRoot = "",
+    [string[]]$PackageId = @(),
+    [switch]$SkipExisting
 )
 
 $ErrorActionPreference = "Stop"
@@ -354,8 +356,48 @@ $packages = @(
             [pscustomobject]@{ Kind = "file"; From = "tinyxml2.cpp"; To = "src\tinyxml2.cpp" },
             [pscustomobject]@{ Kind = "file"; From = "LICENSE.txt"; To = "LICENSE.txt" }
         )
+    },
+    [pscustomobject]@{
+        Id = "googletest"
+        Name = "GoogleTest"
+        UpstreamName = "GoogleTest"
+        Version = "1.17.0"
+        UpstreamVersion = "1.17.0"
+        UpstreamTag = "v1.17.0"
+        Repository = "https://github.com/google/googletest.git"
+        Ref = "v1.17.0"
+        Commit = "52eb8108c5bdec04579160ae17225d66034bd723"
+        ArtifactType = "source"
+        Description = "C++ testing and mocking framework"
+        Homepage = "https://github.com/google/googletest"
+        License = "BSD-3-Clause"
+        PkgConfigName = "gtest"
+        LicenseNote = "GoogleTest is distributed under the BSD 3-Clause license; see LICENSE in the package source."
+        SparsePaths = @(
+            "/CMakeLists.txt",
+            "/cmake/",
+            "/googletest/",
+            "/googlemock/",
+            "/LICENSE"
+        )
+        Copies = @(
+            [pscustomobject]@{ Kind = "file"; From = "CMakeLists.txt"; To = "CMakeLists.txt" },
+            [pscustomobject]@{ Kind = "dir"; From = "cmake"; To = "cmake" },
+            [pscustomobject]@{ Kind = "dir"; From = "googletest"; To = "googletest" },
+            [pscustomobject]@{ Kind = "dir"; From = "googlemock"; To = "googlemock" },
+            [pscustomobject]@{ Kind = "file"; From = "LICENSE"; To = "LICENSE" }
+        )
     }
 )
+
+if ($PackageId.Count -gt 0) {
+    $requestedPackageIds = @($PackageId | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    $packages = @($packages | Where-Object { $_.Id -in $requestedPackageIds })
+    $missingPackageIds = @($requestedPackageIds | Where-Object { $_ -notin @($packages | ForEach-Object { $_.Id }) })
+    if ($missingPackageIds.Count -gt 0) {
+        throw "Unknown C++ source package id(s): $($missingPackageIds -join ', ')"
+    }
+}
 
 New-Item -ItemType Directory -Force -Path $WorkRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $OutputRoot | Out-Null
@@ -392,5 +434,9 @@ upstream_version=$($package.UpstreamVersion)
     $archiveDir = Join-Path $OutputRoot "$($package.Id)\$($package.Version)"
     New-Item -ItemType Directory -Force -Path $archiveDir | Out-Null
     $archivePath = Join-Path $archiveDir "$($package.Id).tar.xz"
+    if ($SkipExisting -and (Test-Path -LiteralPath $archivePath -PathType Leaf)) {
+        Write-Host "Skipping existing package archive: $archivePath"
+        continue
+    }
     New-PackageArchive -Package $package -PackageRoot $packageRoot -ArchivePath $archivePath
 }
