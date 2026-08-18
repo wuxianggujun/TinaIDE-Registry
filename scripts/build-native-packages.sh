@@ -15,7 +15,7 @@ SQLITE_URL="https://www.sqlite.org/2025/sqlite-amalgamation-${SQLITE_NUMBER}.zip
 ZSTD_VERSION="1.5.7"
 ZSTD_REPOSITORY="https://github.com/facebook/zstd.git"
 ZSTD_REF="v${ZSTD_VERSION}"
-ZSTD_COMMIT="ac66b19e6bd6b83238bf008eecc1298105298532"
+ZSTD_COMMIT="f8745da6ff1ad1e7bab384bd1f9d742439278e99"
 ABIS=(arm64-v8a x86_64)
 
 if [[ -z "${ANDROID_NDK_HOME:-}" ]]; then
