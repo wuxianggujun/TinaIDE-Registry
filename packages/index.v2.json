@@ -341,6 +341,59 @@
           "x86_64"
         ]
       }
+    },
+    {
+      "id": "sqlite3",
+      "name": "SQLite3",
+      "description": "Public-domain embedded SQL database engine",
+      "category": "library",
+      "homepage": "https://www.sqlite.org/",
+      "detail_url": "packages/sqlite3/package.json",
+      "android": {
+        "version": "3.50.3",
+        "artifact_type": "static",
+        "install_type": "download",
+        "size": 1343212,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "zstd",
+      "name": "Zstandard",
+      "description": "Fast lossless compression algorithm and library",
+      "category": "library",
+      "homepage": "https://github.com/facebook/zstd",
+      "detail_url": "packages/zstd/package.json",
+      "android": {
+        "version": "1.5.7",
+        "artifact_type": "static",
+        "install_type": "download",
+        "size": 2624968,
+        "is_latest": true,
+        "abi": [
+          "arm64-v8a",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "googletest",
+      "name": "GoogleTest",
+      "description": "C++ testing and mocking framework source package",
+      "category": "library",
+      "homepage": "https://github.com/google/googletest",
+      "detail_url": "packages/googletest/package.json",
+      "android": {
+        "version": "1.17.0",
+        "artifact_type": "source",
+        "install_type": "download",
+        "size": 512160,
+        "is_latest": true
+      }
     }
   ]
 }

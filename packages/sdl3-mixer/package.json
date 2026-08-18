@@ -72,8 +72,8 @@
           "priority": 90,
           "supports_range": true,
           "abi": "arm64-v8a",
-          "size": 132664,
-          "checksum": "sha256:2b2491b377d37047346faacd322923818dec68db9c0705caf2824a42d7694da2"
+          "size": 132404,
+          "checksum": "sha256:252e4579545d7861c3b5575fd664aa544aa34695d06f0beb7c6dafd99d6736d4"
         },
         {
           "id": 3,
@@ -82,8 +82,8 @@
           "priority": 90,
           "supports_range": true,
           "abi": "x86_64",
-          "size": 147740,
-          "checksum": "sha256:90c3189e474fe2cfa6e448e96f756705b7191806e8d74b10b257bb1fbc0a6119"
+          "size": 147544,
+          "checksum": "sha256:5c9f5126eb041454a4b4185eb80d3a00ff4f0176a8c2e39dfb1cdf2eb49c6389"
         }
       ]
     }
