@@ -201,18 +201,18 @@
       "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE's relocated JNI bridge",
       "category": "library",
       "homepage": "https://www.libsdl.org/",
-      "file": "packages/sdl2/2.32.10/sdl2.tar.xz",
+      "file": "packages/sdl2/2.32.10.2/sdl2.tar.xz",
       "artifacts": [
-        { "abi": "arm64-v8a", "file": "packages/sdl2/2.32.10/sdl2-arm64-v8a.tar.xz" },
-        { "abi": "x86_64", "file": "packages/sdl2/2.32.10/sdl2-x86_64.tar.xz" }
+        { "abi": "arm64-v8a", "file": "packages/sdl2/2.32.10.2/sdl2-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/sdl2/2.32.10.2/sdl2-x86_64.tar.xz" }
       ],
       "android": {
-        "version": "2.32.10",
+        "version": "2.32.10.2",
         "artifact_type": "shared",
         "install_type": "download",
         "abi": ["arm64-v8a", "x86_64"],
         "is_latest": true,
-        "release_notes": "Adds SDL2 for arm64-v8a and x86_64. The native runtime targets TinaIDE's relocated org.libsdl2.app Android JNI bridge so SDL2 and SDL3 can coexist."
+        "release_notes": "Rebuilds SDL2 for arm64-v8a and x86_64 with all HIDDeviceManager JNI callbacks relocated to org.libsdl2.app, preventing the SDL runtime startup crash while preserving SDL2 and SDL3 coexistence."
       }
     },
     {

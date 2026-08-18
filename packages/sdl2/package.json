@@ -2,18 +2,18 @@
   "package": {
     "id": "sdl2",
     "name": "SDL2",
-    "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE\u0027s relocated JNI bridge",
+    "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE's relocated JNI bridge",
     "category": "library",
     "homepage": "https://www.libsdl.org/",
     "android": {
-      "version": "2.32.10",
+      "version": "2.32.10.2",
       "artifact_type": "shared",
       "install_type": "download",
-      "size": 1166288,
-      "download_url": "packages/sdl2/2.32.10/sdl2.tar.xz",
-      "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc",
+      "size": 1160624,
+      "download_url": "packages/sdl2/2.32.10.2/sdl2.tar.xz",
+      "checksum": "sha256:41c41e7fcb365c07176c049d88c77af2dd8c301b9937cdb86002f91bd4dd18d8",
       "is_latest": true,
-      "release_notes": "Adds SDL2 for arm64-v8a and x86_64. The native runtime targets TinaIDE\u0027s relocated org.libsdl2.app Android JNI bridge so SDL2 and SDL3 can coexist.",
+      "release_notes": "Rebuilds SDL2 for arm64-v8a and x86_64 with all HIDDeviceManager JNI callbacks relocated to org.libsdl2.app, preventing the SDL runtime startup crash while preserving SDL2 and SDL3 coexistence.",
       "abi": [
         "arm64-v8a",
         "x86_64"
@@ -26,14 +26,14 @@
         "id": 12,
         "package_id": "sdl2",
         "platform": "android",
-        "version": "2.32.10",
+        "version": "2.32.10.2",
         "artifact_type": "shared",
         "install_type": "download",
-        "download_size": 1166288,
-        "download_url": "packages/sdl2/2.32.10/sdl2.tar.xz",
-        "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc",
+        "download_size": 1160624,
+        "download_url": "packages/sdl2/2.32.10.2/sdl2.tar.xz",
+        "checksum": "sha256:41c41e7fcb365c07176c049d88c77af2dd8c301b9937cdb86002f91bd4dd18d8",
         "is_latest": true,
-        "release_notes": "Adds SDL2 for arm64-v8a and x86_64. The native runtime targets TinaIDE\u0027s relocated org.libsdl2.app Android JNI bridge so SDL2 and SDL3 can coexist.",
+        "release_notes": "Rebuilds SDL2 for arm64-v8a and x86_64 with all HIDDeviceManager JNI callbacks relocated to org.libsdl2.app, preventing the SDL runtime startup crash while preserving SDL2 and SDL3 coexistence.",
         "abi": [
           "arm64-v8a",
           "x86_64"
@@ -44,40 +44,40 @@
   "downloads": {
     "sdl2:12": {
       "package_id": "sdl2",
-      "version": "2.32.10",
+      "version": "2.32.10.2",
       "platform": "android",
       "install_type": "download",
-      "size": 1166288,
-      "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc",
+      "size": 1160624,
+      "checksum": "sha256:41c41e7fcb365c07176c049d88c77af2dd8c301b9937cdb86002f91bd4dd18d8",
       "sources": [
         {
           "id": 1,
           "name": "Registry universal (legacy)",
-          "url": "packages/sdl2/2.32.10/sdl2.tar.xz",
+          "url": "packages/sdl2/2.32.10.2/sdl2.tar.xz",
           "priority": 100,
           "supports_range": true,
-          "size": 1166288,
-          "checksum": "sha256:6107c57fdb1d4728c6049e7f7ca46da9e1ba7c5ed9b812e3ae8c593bb5bd84cc"
+          "size": 1160624,
+          "checksum": "sha256:41c41e7fcb365c07176c049d88c77af2dd8c301b9937cdb86002f91bd4dd18d8"
         },
         {
           "id": 2,
           "name": "Registry arm64-v8a",
-          "url": "packages/sdl2/2.32.10/sdl2-arm64-v8a.tar.xz",
+          "url": "packages/sdl2/2.32.10.2/sdl2-arm64-v8a.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "arm64-v8a",
-          "size": 720264,
-          "checksum": "sha256:7e91a807c606af3f2965f7fcd8dd39ce692d5fc2b2adaa60e6006c5b91a5b785"
+          "size": 713696,
+          "checksum": "sha256:ba33c3c9c41fee45db9d5443a29c01194137f82188db60c4418695399f79e150"
         },
         {
           "id": 3,
           "name": "Registry x86_64",
-          "url": "packages/sdl2/2.32.10/sdl2-x86_64.tar.xz",
+          "url": "packages/sdl2/2.32.10.2/sdl2-x86_64.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "x86_64",
-          "size": 790832,
-          "checksum": "sha256:b9e1f6c419431a16bfc731fb161b50228e3b34ff7f34b2b4cd15e1406a9c828c"
+          "size": 785604,
+          "checksum": "sha256:8bccc0b1d68d437026e4a843e9a7ac787db96756e73cf9dc3175eb68eef3c147"
         }
       ]
     }

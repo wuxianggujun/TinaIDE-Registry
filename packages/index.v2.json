@@ -193,15 +193,15 @@
     {
       "id": "sdl2",
       "name": "SDL2",
-      "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE\u0027s relocated JNI bridge",
+      "description": "Simple DirectMedia Layer 2 Android runtime for TinaIDE's relocated JNI bridge",
       "category": "library",
       "homepage": "https://www.libsdl.org/",
       "detail_url": "packages/sdl2/package.json",
       "android": {
-        "version": "2.32.10",
+        "version": "2.32.10.2",
         "artifact_type": "shared",
         "install_type": "download",
-        "size": 1166288,
+        "size": 1160624,
         "is_latest": true,
         "abi": [
           "arm64-v8a",
