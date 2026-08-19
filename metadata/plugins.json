@@ -93,6 +93,21 @@
       "created_at": "2026-06-07T00:00:00Z",
       "updated_at": "2026-06-07T00:00:00Z",
       "changelog": "Publish the SDL3 graphics template for the P0 Registry package set."
+    },
+    {
+      "source": "sources/plugins/tinaide.template.sdl2",
+      "category": "template",
+      "tags": ["sdl2", "template", "cmake", "cpp"],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.template.sdl2",
+      "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+      "license": "Apache-2.0",
+      "created_at": "2026-08-19T00:00:00Z",
+      "updated_at": "2026-08-19T00:00:00Z",
+      "changelog": "Publish the SDL2 + CMake project template."
     }
   ]
 }

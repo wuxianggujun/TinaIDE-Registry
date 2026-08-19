@@ -130,6 +130,27 @@
       "detail_url": "plugins/tinaide.template.sdl3.graphics/plugin.json",
       "created_at": "2026-06-07T00:00:00Z",
       "updated_at": "2026-06-07T00:00:00Z"
+    },
+    {
+      "id": "tinaide.template.sdl2",
+      "plugin_id": "tinaide.template.sdl2",
+      "name": "SDL2 Project Template",
+      "description": "Adds an SDL2 + CMake project template to New Project.",
+      "category": "template",
+      "tags": [
+        "sdl2",
+        "template",
+        "cmake",
+        "cpp"
+      ],
+      "publisher": {
+        "id": "tinaide",
+        "display_name": "TinaIDE"
+      },
+      "latest_version": "1.0.0",
+      "detail_url": "plugins/tinaide.template.sdl2/plugin.json",
+      "created_at": "2026-08-19T00:00:00Z",
+      "updated_at": "2026-08-19T00:00:00Z"
     }
   ]
 }
