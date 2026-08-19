@@ -19,6 +19,17 @@
   },
   "versions": [
     {
+      "version": "1.0.2",
+      "version_code": 10002,
+      "file_size": 3076,
+      "file_hash": "sha256:ea00bfd192210a1d27c5eafcf717edb275387c402ee19cd46d7c1e8b2bc1173a",
+      "download_url": "plugins/tinaide.template.sdl3/1.0.2/tinaide.template.sdl3.tinaplug",
+      "api_version": 1,
+      "changelog": "Declare the SDL3 package dependency and require TinaIDE 0.18.20 for preflight checks.",
+      "created_at": "2026-08-19T00:00:00Z",
+      "min_app_version": "0.18.20"
+    },
+    {
       "version": "1.0.1",
       "version_code": 10001,
       "file_size": 3008,
@@ -30,5 +41,5 @@
     }
   ],
   "created_at": "2026-06-03T00:00:00Z",
-  "updated_at": "2026-06-03T00:00:00Z"
+  "updated_at": "2026-08-19T00:00:00Z"
 }

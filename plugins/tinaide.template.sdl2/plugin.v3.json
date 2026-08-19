@@ -19,6 +19,17 @@
   },
   "versions": [
     {
+      "version": "1.0.1",
+      "version_code": 10001,
+      "file_size": 5013,
+      "file_hash": "sha256:c0a54e40983c841aecce9e48adc2b428e4b835fa54281dbb8c0951917cd25106",
+      "download_url": "plugins/tinaide.template.sdl2/1.0.1/tinaide.template.sdl2.tinaplug",
+      "api_version": 1,
+      "changelog": "Declare the SDL2 package dependency and require TinaIDE 0.18.20 for Android ABI-aware builds.",
+      "created_at": "2026-08-19T00:00:00Z",
+      "min_app_version": "0.18.20"
+    },
+    {
       "version": "1.0.0",
       "version_code": 10000,
       "file_size": 4945,

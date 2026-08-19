@@ -1,7 +1,8 @@
 {
   "id": "tinaide.template.sdl3.graphics",
   "name": "SDL3 Graphics Project Template",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "minAppVersion": "0.18.20",
   "description": "Adds an SDL3 graphics starter template with SDL3_image, SDL3_ttf, Box2D, and miniaudio.",
   "type": "config",
   "author": {
@@ -15,7 +16,8 @@
         "description": "Ready-to-run SDL3 starter with image/font headers, Box2D physics, and miniaudio header wiring.",
         "templatePath": "templates/sdl3_graphics_cmake.zip",
         "buildSystem": "cmake",
-        "primaryLanguage": "CPP"
+        "primaryLanguage": "CPP",
+        "requiredPackages": ["sdl3", "sdl3-image", "sdl3-ttf", "box2d", "miniaudio"]
       }
     ]
   }

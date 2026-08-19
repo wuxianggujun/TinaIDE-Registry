@@ -76,8 +76,8 @@
       "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
       "license": "Apache-2.0",
       "created_at": "2026-06-03T00:00:00Z",
-      "updated_at": "2026-06-03T00:00:00Z",
-      "changelog": "Publish the SDL3 project template as a Registry plugin."
+      "updated_at": "2026-08-19T00:00:00Z",
+      "changelog": "Declare the SDL3 package dependency and require TinaIDE 0.18.20 for preflight checks."
     },
     {
       "source": "sources/plugins/tinaide.template.sdl3.graphics",
@@ -91,8 +91,8 @@
       "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
       "license": "Apache-2.0",
       "created_at": "2026-06-07T00:00:00Z",
-      "updated_at": "2026-06-07T00:00:00Z",
-      "changelog": "Publish the SDL3 graphics template for the P0 Registry package set."
+      "updated_at": "2026-08-19T00:00:00Z",
+      "changelog": "Declare all SDL3 graphics package dependencies and require TinaIDE 0.18.20 for preflight checks."
     },
     {
       "source": "sources/plugins/tinaide.template.sdl2",
@@ -107,7 +107,7 @@
       "license": "Apache-2.0",
       "created_at": "2026-08-19T00:00:00Z",
       "updated_at": "2026-08-19T00:00:00Z",
-      "changelog": "Publish the SDL2 + CMake project template."
+      "changelog": "Declare the SDL2 package dependency and require TinaIDE 0.18.20 for Android ABI-aware builds."
     }
   ]
 }
