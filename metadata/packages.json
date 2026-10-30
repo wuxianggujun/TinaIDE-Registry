@@ -347,10 +347,10 @@
       "description": "Simple and easy-to-use game programming library",
       "category": "library",
       "homepage": "https://www.raylib.com/",
-      "file": "packages/raylib/6.0/raylib.tar.xz",
+      "file": "packages/raylib/6.0-r2/raylib.tar.xz",
       "artifacts": [
-        { "abi": "arm64-v8a", "file": "packages/raylib/6.0/raylib-arm64-v8a.tar.xz" },
-        { "abi": "x86_64", "file": "packages/raylib/6.0/raylib-x86_64.tar.xz" }
+        { "abi": "arm64-v8a", "file": "packages/raylib/6.0-r2/raylib-arm64-v8a.tar.xz" },
+        { "abi": "x86_64", "file": "packages/raylib/6.0-r2/raylib-x86_64.tar.xz" }
       ],
       "android": {
         "version": "6.0",
@@ -358,7 +358,7 @@
         "install_type": "download",
         "abi": ["arm64-v8a", "x86_64"],
         "is_latest": true,
-        "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata."
+        "release_notes": "Package revision 2 restores EndDrawing buffer swapping, input polling, and frame timing with upstream configuration defaults. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects; older binary packages are unsupported. Immutable revision-2 artifacts use the 6.0-r2 path."
       }
     },
     {

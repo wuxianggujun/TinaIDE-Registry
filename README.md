@@ -122,6 +122,16 @@ Android native 包不要求本地 Docker 或 NDK。使用 GitHub Actions 的
 当前 Registry 还提供 SDL2/SDL3、raylib、Box2D、Dear ImGui、GLM、fmt、
 nlohmann-json、stb、TinyXML-2 和 miniaudio。
 
+### raylib 当前支持基线
+
+- raylib 6.0 revision 2 恢复标准 `EndDrawing()` 帧循环，包含交换帧、输入轮询和计时。
+  当前索引指向不可变的 `packages/raylib/6.0-r2/` 制品，支持 arm64-v8a 与 x86_64；
+  历史 `6.0/` 制品不覆盖，也不再作为受支持的下载入口。
+- `tinaide.template.raylib` 1.0.1 要求 TinaIDE 0.18.36，使用 NativeActivity，
+  在绘制前处理 Back/Escape 按键队列并正常关闭窗口，不提供旧宿主兼容版本。
+- 不兼容旧 raylib/SDL 二进制包，不新增旧包自动修补或降级兜底。已有安装需要重新安装
+  修复包并重建项目；只升级 APK 不会替换已安装的库，模板也不重写既有源码。
+
 ## GitHub Actions
 
 - `Validate Registry`：在 `main` push、PR 和手动触发时运行，重建并校验索引；如果生成物没有提交，会直接失败。

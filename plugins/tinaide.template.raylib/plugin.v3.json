@@ -1,0 +1,36 @@
+{
+  "id": "tinaide.template.raylib",
+  "plugin_id": "tinaide.template.raylib",
+  "name": "raylib Project Template",
+  "description": "Adds a raylib + CMake project template to New Project.",
+  "category": "template",
+  "tags": [
+    "raylib",
+    "template",
+    "cmake",
+    "c",
+    "native-activity"
+  ],
+  "repository_url": "https://github.com/wuxianggujun/TinaIDE-Registry/tree/main/sources/plugins/tinaide.template.raylib",
+  "homepage_url": "https://github.com/wuxianggujun/TinaIDE-Registry",
+  "license": "GPL-3.0-or-later",
+  "publisher": {
+    "id": "tinaide",
+    "display_name": "TinaIDE"
+  },
+  "versions": [
+    {
+      "version": "1.0.1",
+      "version_code": 10001,
+      "file_size": 39714,
+      "file_hash": "sha256:0bb7d0a6c64be01e45bb02e5eeca70df5d82ff1e2b78822c298a3ced823876d4",
+      "download_url": "plugins/tinaide.template.raylib/1.0.1/tinaide.template.raylib.tinaplug",
+      "api_version": 1,
+      "changelog": "Publish the NativeActivity raylib template with queued Back/Escape handling and clean window shutdown. Requires TinaIDE 0.18.36 and raylib 6.0 package revision 2; older binary packages are unsupported.",
+      "created_at": "2026-10-30T00:00:00Z",
+      "min_app_version": "0.18.36"
+    }
+  ],
+  "created_at": "2026-10-30T00:00:00Z",
+  "updated_at": "2026-10-30T00:00:00Z"
+}

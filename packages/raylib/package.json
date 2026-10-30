@@ -9,11 +9,11 @@
       "version": "6.0",
       "artifact_type": "shared",
       "install_type": "download",
-      "size": 1101432,
-      "download_url": "packages/raylib/6.0/raylib.tar.xz",
-      "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+      "size": 993064,
+      "download_url": "packages/raylib/6.0-r2/raylib.tar.xz",
+      "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
       "is_latest": true,
-      "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata.",
+      "release_notes": "Package revision 2 restores EndDrawing buffer swapping, input polling, and frame timing with upstream configuration defaults. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects; older binary packages are unsupported. Immutable revision-2 artifacts use the 6.0-r2 path.",
       "abi": [
         "arm64-v8a",
         "x86_64"
@@ -29,11 +29,11 @@
         "version": "6.0",
         "artifact_type": "shared",
         "install_type": "download",
-        "download_size": 1101432,
-        "download_url": "packages/raylib/6.0/raylib.tar.xz",
-        "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+        "download_size": 993064,
+        "download_url": "packages/raylib/6.0-r2/raylib.tar.xz",
+        "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
         "is_latest": true,
-        "release_notes": "Adds the raylib Android shared library, headers, CMake config, and pkg-config metadata.",
+        "release_notes": "Package revision 2 restores EndDrawing buffer swapping, input polling, and frame timing with upstream configuration defaults. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects; older binary packages are unsupported. Immutable revision-2 artifacts use the 6.0-r2 path.",
         "abi": [
           "arm64-v8a",
           "x86_64"
@@ -47,37 +47,37 @@
       "version": "6.0",
       "platform": "android",
       "install_type": "download",
-      "size": 1101432,
-      "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074",
+      "size": 993064,
+      "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
       "sources": [
         {
           "id": 1,
           "name": "Registry universal (legacy)",
-          "url": "packages/raylib/6.0/raylib.tar.xz",
+          "url": "packages/raylib/6.0-r2/raylib.tar.xz",
           "priority": 100,
           "supports_range": true,
-          "size": 1101432,
-          "checksum": "sha256:e2a7e61acd6099d8a28b9a1f855279f3bfdf41a9d83a4910d865b1b636b06074"
+          "size": 993064,
+          "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145"
         },
         {
           "id": 2,
           "name": "Registry arm64-v8a",
-          "url": "packages/raylib/6.0/raylib-arm64-v8a.tar.xz",
+          "url": "packages/raylib/6.0-r2/raylib-arm64-v8a.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "arm64-v8a",
-          "size": 571852,
-          "checksum": "sha256:60e68c1772950e03b5049dcd958e6abaaa4edd0f34792b12459da509544c311a"
+          "size": 519388,
+          "checksum": "sha256:0a2807e18383df9676382c4f37bdb7592036828416085dfe442566da244f7fa3"
         },
         {
           "id": 3,
           "name": "Registry x86_64",
-          "url": "packages/raylib/6.0/raylib-x86_64.tar.xz",
+          "url": "packages/raylib/6.0-r2/raylib-x86_64.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "x86_64",
-          "size": 646520,
-          "checksum": "sha256:d08bf0b7903fe9a1340c892892181bbca7a17791873ce4ad34c7eb6cde415610"
+          "size": 585564,
+          "checksum": "sha256:c4f70f6107cf76e99cc2ba33f6ce8cfe67eed3988843efa84767165b3288a93d"
         }
       ]
     }
