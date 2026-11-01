@@ -48,6 +48,8 @@ Android 依赖包按“一个库一个逻辑包”发布，不拆成 `-arm64` / 
 - `static`、`shared`、`executable` 包必须声明 `abi`。
 - 单个包可以同时包含多个 ABI 目录，例如 `lib/arm64-v8a/` 和 `lib/x86_64/`。
 - Android 客户端会在下载前拦截不匹配当前设备的 `abi`。
+- 同一上游版本的重新打包使用可选的 `package_revision`（正整数）。TinaIDE 0.18.39 起，
+  检查更新会先比较上游版本，再比较已安装 `package.json` 的 `packageRevision`，避免漏掉同版本资源修复。
 
 TinaIDE 插件市场和依赖包市场的公开 Registry。
 
@@ -124,13 +126,17 @@ nlohmann-json、stb、TinyXML-2 和 miniaudio。
 
 ### raylib 当前支持基线
 
-- raylib 6.0 revision 2 恢复标准 `EndDrawing()` 帧循环，包含交换帧、输入轮询和计时。
-  当前索引指向不可变的 `packages/raylib/6.0-r2/` 制品，支持 arm64-v8a 与 x86_64；
-  历史 `6.0/` 制品不覆盖，也不再作为受支持的下载入口。
+- raylib 6.0 revision 3 修复系统手势返回 / `Activity.finish()` 后的 Android 销毁事件死锁，
+  以及窗口初始化完成前取消运行无法退出的问题；保留 r2 的交换帧、输入轮询和计时修复。
+  当前索引指向不可变的 `packages/raylib/6.0-r3/` 制品，支持 arm64-v8a 与 x86_64；
+  已从当前仓库树删除不受支持的 `6.0/`、`6.0-r2/` 制品，历史仍可由 Git 提交追溯，未覆盖旧文件。
+  补丁没有给游戏设置总运行时限，按 Home 切后台仍可恢复。
 - `tinaide.template.raylib` 1.0.1 要求 TinaIDE 0.18.36，使用 NativeActivity，
   在绘制前处理 Back/Escape 按键队列并正常关闭窗口，不提供旧宿主兼容版本。
 - 不兼容旧 raylib/SDL 二进制包，不新增旧包自动修补或降级兜底。已有安装需要重新安装
-  修复包并重建项目；只升级 APK 不会替换已安装的库，模板也不重写既有源码。
+  修复包并重建项目与导出 APK；只升级 TinaIDE APK 不会下载替换已安装的库，模板也不重写既有源码。
+  TinaIDE 0.18.39 起在安装、运行和 APK 导出前拒绝旧 raylib；通过包更新的原子替换清理旧安装，
+  不删除用户项目源码。项目手动复制的旧库必须由用户删除或替换，不能遮蔽当前包。
 
 ## GitHub Actions
 

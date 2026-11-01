@@ -334,8 +334,9 @@
         "version": "6.0",
         "artifact_type": "shared",
         "install_type": "download",
-        "size": 993064,
+        "size": 993284,
         "is_latest": true,
+        "package_revision": 3,
         "abi": [
           "arm64-v8a",
           "x86_64"

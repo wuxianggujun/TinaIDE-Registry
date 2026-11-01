@@ -9,15 +9,16 @@
       "version": "6.0",
       "artifact_type": "shared",
       "install_type": "download",
-      "size": 993064,
-      "download_url": "packages/raylib/6.0-r2/raylib.tar.xz",
-      "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
+      "size": 993284,
+      "download_url": "packages/raylib/6.0-r3/raylib.tar.xz",
+      "checksum": "sha256:2dd92263294d9e8efdc4431ce3ea3e59dff17c7b4c304e8075476f388103aeb0",
       "is_latest": true,
-      "release_notes": "Package revision 2 restores EndDrawing buffer swapping, input polling, and frame timing with upstream configuration defaults. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects; older binary packages are unsupported. Immutable revision-2 artifacts use the 6.0-r2 path.",
+      "release_notes": "Package revision 3 fixes the Android destroy-event deadlock after gesture Back or Activity.finish(), including cancellation before the first window. Retains revision 2 buffer swapping, input polling, and frame timing. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects and exported APKs; upgrading TinaIDE alone does not replace installed libraries. No game runtime limit. Immutable revision-3 artifacts use the 6.0-r3 path.",
       "abi": [
         "arm64-v8a",
         "x86_64"
-      ]
+      ],
+      "package_revision": 3
     }
   },
   "versions": {
@@ -29,15 +30,16 @@
         "version": "6.0",
         "artifact_type": "shared",
         "install_type": "download",
-        "download_size": 993064,
-        "download_url": "packages/raylib/6.0-r2/raylib.tar.xz",
-        "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
+        "download_size": 993284,
+        "download_url": "packages/raylib/6.0-r3/raylib.tar.xz",
+        "checksum": "sha256:2dd92263294d9e8efdc4431ce3ea3e59dff17c7b4c304e8075476f388103aeb0",
         "is_latest": true,
-        "release_notes": "Package revision 2 restores EndDrawing buffer swapping, input polling, and frame timing with upstream configuration defaults. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects; older binary packages are unsupported. Immutable revision-2 artifacts use the 6.0-r2 path.",
+        "release_notes": "Package revision 3 fixes the Android destroy-event deadlock after gesture Back or Activity.finish(), including cancellation before the first window. Retains revision 2 buffer swapping, input polling, and frame timing. Supports arm64-v8a and x86_64. Reinstall raylib and rebuild projects and exported APKs; upgrading TinaIDE alone does not replace installed libraries. No game runtime limit. Immutable revision-3 artifacts use the 6.0-r3 path.",
         "abi": [
           "arm64-v8a",
           "x86_64"
-        ]
+        ],
+        "package_revision": 3
       }
     ]
   },
@@ -47,37 +49,37 @@
       "version": "6.0",
       "platform": "android",
       "install_type": "download",
-      "size": 993064,
-      "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145",
+      "size": 993284,
+      "checksum": "sha256:2dd92263294d9e8efdc4431ce3ea3e59dff17c7b4c304e8075476f388103aeb0",
       "sources": [
         {
           "id": 1,
           "name": "Registry universal (legacy)",
-          "url": "packages/raylib/6.0-r2/raylib.tar.xz",
+          "url": "packages/raylib/6.0-r3/raylib.tar.xz",
           "priority": 100,
           "supports_range": true,
-          "size": 993064,
-          "checksum": "sha256:ded1e14b407f13b7ffea1f4708593fea64a5e0bf2068d6136edf456ee4cfc145"
+          "size": 993284,
+          "checksum": "sha256:2dd92263294d9e8efdc4431ce3ea3e59dff17c7b4c304e8075476f388103aeb0"
         },
         {
           "id": 2,
           "name": "Registry arm64-v8a",
-          "url": "packages/raylib/6.0-r2/raylib-arm64-v8a.tar.xz",
+          "url": "packages/raylib/6.0-r3/raylib-arm64-v8a.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "arm64-v8a",
-          "size": 519388,
-          "checksum": "sha256:0a2807e18383df9676382c4f37bdb7592036828416085dfe442566da244f7fa3"
+          "size": 519856,
+          "checksum": "sha256:ef6a09b6634cfd40b0739f7c3b8a7ec9f5827ce060458e5d825e1dad125b93cf"
         },
         {
           "id": 3,
           "name": "Registry x86_64",
-          "url": "packages/raylib/6.0-r2/raylib-x86_64.tar.xz",
+          "url": "packages/raylib/6.0-r3/raylib-x86_64.tar.xz",
           "priority": 90,
           "supports_range": true,
           "abi": "x86_64",
-          "size": 585564,
-          "checksum": "sha256:c4f70f6107cf76e99cc2ba33f6ce8cfe67eed3988843efa84767165b3288a93d"
+          "size": 585400,
+          "checksum": "sha256:29b889a8a8ec2c6a6976f0bc8deb65c45b9cc69e623f28c3c92ee21c95940144"
         }
       ]
     }

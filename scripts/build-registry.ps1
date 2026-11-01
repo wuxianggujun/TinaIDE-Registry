@@ -651,6 +651,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         release_notes = [string]$pkg.android.release_notes
     }
     Add-OptionalField -Target $androidEntry -Name "abi" -Value $androidAbi
+    Add-OptionalField -Target $androidEntry -Name "package_revision" -Value $pkg.android.package_revision
     Add-OptionalField -Target $androidEntry -Name "dependencies" -Value $androidDependencies
 
     $packageEntry = [ordered]@{
@@ -677,6 +678,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         release_notes = [string]$pkg.android.release_notes
     }
     Add-OptionalField -Target $androidVersionEntry -Name "abi" -Value $androidAbi
+    Add-OptionalField -Target $androidVersionEntry -Name "package_revision" -Value $pkg.android.package_revision
     Add-OptionalField -Target $androidVersionEntry -Name "dependencies" -Value $androidDependencies
 
     $versionMap[[string]$pkg.id] = [ordered]@{
@@ -690,6 +692,7 @@ foreach ($pkg in @($packageMetadata.packages)) {
         size = $file.Length
         is_latest = [bool]$pkg.android.is_latest
     }
+    Add-OptionalField -Target $androidCatalogEntry -Name "package_revision" -Value $pkg.android.package_revision
     Add-OptionalField -Target $androidCatalogEntry -Name "abi" -Value $androidAbi
 
     $packageCatalogEntries += [ordered]@{
