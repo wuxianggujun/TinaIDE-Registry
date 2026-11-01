@@ -97,10 +97,10 @@
         "id": "tinaide",
         "display_name": "TinaIDE"
       },
-      "latest_version": "1.0.2",
+      "latest_version": "1.0.4",
       "detail_url": "plugins/tinaide.template.sdl3/plugin.v3.json",
       "created_at": "2026-06-03T00:00:00Z",
-      "updated_at": "2026-08-19T00:00:00Z"
+      "updated_at": "2026-11-01T00:00:00Z"
     },
     {
       "id": "tinaide.template.sdl3.graphics",

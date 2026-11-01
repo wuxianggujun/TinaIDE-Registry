@@ -138,6 +138,14 @@ nlohmann-json、stb、TinyXML-2 和 miniaudio。
   TinaIDE 0.18.39 起在安装、运行和 APK 导出前拒绝旧 raylib；通过包更新的原子替换清理旧安装，
   不删除用户项目源码。项目手动复制的旧库必须由用户删除或替换，不能遮蔽当前包。
 
+### SDL3 模板启动窗口
+
+`tinaide.template.sdl3` 1.0.4 在创建窗口时直接设置 `SDL_WINDOW_RESIZABLE`，
+不再先创建固定横屏窗口、再改为可调整大小。后者会触发 Android 横竖屏往返，
+API 36 模拟器的启动截图曾出现半屏黑边；同一 Release 宿主的 A/B 回归已确认
+新写法不再触发这次往返。升级模板不会改写现有项目，可在其窗口创建参数中
+加入该标记，并移除随后仅用于本样例的 `SDL_SetWindowResizable` 调用。
+
 ## GitHub Actions
 
 - `Validate Registry`：在 `main` push、PR 和手动触发时运行，重建并校验索引；如果生成物没有提交，会直接失败。
